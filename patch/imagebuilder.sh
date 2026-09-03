@@ -134,8 +134,15 @@ custom_packages() {
         [[ "${?}" -eq "0" ]] && echo -e "${INFO} The [ ${plugin_url} ] is downloaded successfully."
     done
 
-    # Download other luci-app-xxx
-    # ......
+    # Download momo (mihomo) from custom feed
+    if [[ -n "${MOMO_FEED}" ]]; then
+        momo_idx="$(curl -fsSL "${MOMO_FEED}/index.json")"
+        momo_v="$(echo "${momo_idx}" | grep -oE '"momo":"[^"]*"' | cut -d'"' -f4)"
+        momo_luci_v="$(echo "${momo_idx}" | grep -oE '"luci-app-momo":"[^"]*"' | cut -d'"' -f4)"
+        [[ -n "${momo_v}" ]] && curl -fsSL -O "${MOMO_FEED}/momo-${momo_v}.apk"
+        [[ -n "${momo_luci_v}" ]] && curl -fsSL -O "${MOMO_FEED}/luci-app-momo-${momo_luci_v}.apk"
+        echo -e "${INFO} momo: [ ${momo_v} ], luci-app-momo: [ ${momo_luci_v} ]"
+    fi
 
     # Remove the packages that are not needed based on the Image Builder type (APK or OPKG)
     if grep -q "CONFIG_USE_APK=y" ../.config; then
@@ -182,13 +189,6 @@ custom_files() {
     cd ${imagebuilder_path}
     echo -e "${STEPS} Adding custom files..."
 
-    # Inject custom package feed (momo/mihomo) via MOMO_FEED env
-    if [[ -n "${MOMO_FEED}" ]]; then
-        sed -i 's/^option check_signature/# option check_signature/' repositories.conf 2>/dev/null || true
-        grep -q "^src/gz momo " repositories.conf 2>/dev/null || echo "src/gz momo ${MOMO_FEED}" >> repositories.conf
-        echo -e "${INFO} Injected custom feed: [ ${MOMO_FEED} ]"
-    fi
-
     if [[ -d "${custom_files_path}" ]]; then
         # Copy custom files
         [[ -d "files" ]] || mkdir -p files
@@ -209,13 +209,13 @@ rebuild_firmware() {
     # Selecting default packages, lib, theme, app and i18n, etc.
     my_packages="\
         acpid attr base-files bash bc blkid block-mount blockd bsdtar btrfs-progs busybox bzip2 \
-        cgi-io chattr comgt comgt-ncm containerd coremark coreutils coreutils-base64 coreutils-nohup \
-        coreutils-truncate curl docker docker-compose dockerd dosfstools dumpe2fs e2freefrag e2fsprogs \
+        cgi-io chattr comgt comgt-ncm coremark coreutils coreutils-base64 coreutils-nohup \
+        coreutils-truncate curl dosfstools dumpe2fs e2freefrag e2fsprogs \
         exfat-mkfs f2fs-tools f2fsck fdisk gawk getopt git gzip iconv jq \
         jshn libjson-script liblucihttp \
         liblucihttp-lua losetup lsattr lsblk lscpu mkf2fs mount-utils openssl-util parted \
         perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
-        pigz ppp ppp-mod-pppoe pv rename resize2fs runc tar tini ttyd tune2fs \
+        pigz ppp ppp-mod-pppoe pv rename resize2fs tar ttyd tune2fs \
         uclient-fetch uhttpd uhttpd-mod-ubus unzip uqmi usb-modeswitch uuidgen wget-ssl whereis \
         which wwan xfs-fsck xfs-mkfs xz xz-utils ziptool zoneinfo-asia zoneinfo-core zstd \
         \
