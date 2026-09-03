@@ -186,6 +186,7 @@ print_machine() {
 print_publicip() {
     public_ip=${public_ip:-""}
     public_isp=${public_isp:-"Undefined"}
+    [ -z "$public_ip" ] && return
     print_line "ISP    : $AddrColor${public_ip}$NormalColor (${public_isp})"
 }
 
