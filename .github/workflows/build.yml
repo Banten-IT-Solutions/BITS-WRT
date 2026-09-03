@@ -36,52 +36,42 @@ on:
       openwrt_ver:
         description: 'Select OpenWrt Version'
         required: true
-        default: '23.05.x'
+        default: '23.05.5'
         type: choice
         options:
-          - 23.05.x
-          - 24.10.x
-      rootfs_url:
-        description: 'Input Rootfs URL (Wget Only)'
-        required: true
-        default: ''
+          - 23.05.5
+          - 24.10.4
 
 jobs:
-  download:
-    name: 📥 Fetch Rootfs
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Fetch
-        run: |
-          wget "${{ github.event.inputs.rootfs_url }}"
-          ROOTFS_PATH=$(find ./ -name "*rootfs.tar.gz")
-          echo "ROOTFS_PATH=$ROOTFS_PATH" >> $GITHUB_ENV
-
-      - name: 🗃️ Stash
-        uses: actions/upload-artifact@v4
-        with:
-          name: amlogic-rootfs
-          path: |
-            ${{ env.ROOTFS_PATH }}
-
   build:
-    name: 🛠️ Build ${{ github.event.inputs.board_version }}
+    name: 🚀 Build ${{ github.event.inputs.board_version }}
     runs-on: ubuntu-22.04
-    needs: download
     steps:
-      - name: 📦 Clone Builder
-        run: |
-          if [ -d "amlogic-s9xxx-openwrt" ]; then
-            rm -rf amlogic-s9xxx-openwrt
-          fi
-          git clone --depth 1 https://github.com/ophub/amlogic-s9xxx-openwrt.git
-          mkdir -p amlogic-s9xxx-openwrt/openwrt-armsr
+      - name: 📦 Checkout
+        uses: actions/checkout@v4
 
-      - name: ⬇️ Grab Rootfs
-        uses: actions/download-artifact@v4
-        with:
-          name: amlogic-rootfs
-          path: ./amlogic-s9xxx-openwrt/openwrt-armsr/
+      - name: 🧬 Clone Builder
+        run: |
+          git clone --depth 1 https://github.com/ophub/amlogic-s9xxx-openwrt.git
+
+      - name: 🩹 Patch Overlay
+        run: |
+          mkdir -p amlogic-s9xxx-openwrt/config/imagebuilder/files
+          cp -r files/files/. amlogic-s9xxx-openwrt/config/imagebuilder/files/
+          printf 'CONFIG_PACKAGE_luci-theme-material=y\n' > amlogic-s9xxx-openwrt/config/imagebuilder/config
+
+      - name: 🍞 Bake Rootfs
+        run: |
+          sudo apt-get update -y >/dev/null
+          sudo apt-get install -y zstd make >/dev/null
+          cd amlogic-s9xxx-openwrt
+          chmod +x config/imagebuilder/imagebuilder.sh
+          ./config/imagebuilder/imagebuilder.sh openwrt:${{ github.event.inputs.openwrt_ver }}
+
+      - name: 📥 Stage Rootfs
+        run: |
+          mkdir -p amlogic-s9xxx-openwrt/openwrt-armsr
+          cp amlogic-s9xxx-openwrt/output/*rootfs.tar.gz amlogic-s9xxx-openwrt/openwrt-armsr/
 
       - name: 🎯 Resolve Board
         run: |
