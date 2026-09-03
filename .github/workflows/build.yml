@@ -13,7 +13,8 @@ on:
         options:
           - HG680-P
           - B860H
-      jobs:
+
+jobs:
   build:
     name: 🚀 Build ${{ github.event.inputs.board_version }}
     runs-on: ubuntu-22.04
@@ -29,7 +30,13 @@ on:
         run: |
           mkdir -p amlogic-s9xxx-openwrt/config/imagebuilder/files
           cp -r files/files/. amlogic-s9xxx-openwrt/config/imagebuilder/files/
-          printf 'CONFIG_PACKAGE_luci-theme-material=y\n' > amlogic-s9xxx-openwrt/config/imagebuilder/config
+          cat > amlogic-s9xxx-openwrt/config/imagebuilder/config <<'EOF'
+          CONFIG_PACKAGE_luci-theme-material=y
+          CONFIG_PACKAGE_tailscale=y
+          CONFIG_PACKAGE_luci-app-tailscale-community=y
+          CONFIG_PACKAGE_momo=y
+          CONFIG_PACKAGE_luci-app-momo=y
+          EOF
 
       - name: 🧩 Patch Partition
         run: |
@@ -37,6 +44,7 @@ on:
           cp -f patch/openwrt-install-amlogic "$SBIN/"
           cp -f patch/openwrt-tf "$SBIN/"
           chmod +x "$SBIN/openwrt-install-amlogic" "$SBIN/openwrt-tf"
+          cp -f patch/imagebuilder.sh amlogic-s9xxx-openwrt/config/imagebuilder/imagebuilder.sh
 
       - name: 🏷️ Resolve Version
         run: |
@@ -49,6 +57,7 @@ on:
           sudo apt-get update -y >/dev/null
           sudo apt-get install -y zstd make >/dev/null
           cd amlogic-s9xxx-openwrt
+          export MOMO_FEED="https://momomomo.pages.dev/openwrt-$(echo "${{ env.VER }}" | cut -d. -f1-2)/aarch64_generic/momo"
           chmod +x config/imagebuilder/imagebuilder.sh
           ./config/imagebuilder/imagebuilder.sh openwrt:${{ env.VER }}
 
@@ -98,9 +107,7 @@ on:
                 ${{ env.FILE_PATH }}
           body: |
             ### BITS-WRT Information
-            * Default IP: 192.168.1.1
+            * Default IP: 20.20.20.20
             * Default username: root
             * Default password: bitswrt
-            * Default WIFI name: BITS-WRT
-            * Default WIFI password: 12345678
             * Release date: ${{ env.date_time }}

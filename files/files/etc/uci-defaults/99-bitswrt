@@ -1,0 +1,21 @@
+#!/bin/sh
+# BITS-WRT default provisioning
+
+# hostname + LAN
+uci -q set system.@system[0].hostname='bits-wrt'
+uci -q set network.lan.ipaddr='20.20.20.20'
+uci -q set network.lan.netmask='255.255.255.0'
+uci -q delete network.lan.ip6assign
+uci commit network
+uci commit system
+
+# no wifi: disable all radios
+for section in $(uci -q show wireless 2>/dev/null | grep -F '=wifi-device' | cut -d. -f2 | cut -d= -f1); do
+    uci -q set "wireless.${section}.disabled=1"
+done
+uci -q commit wireless
+
+# root password
+sed -i 's|^root:[^:]*:|root:$1$T5LoRDvh$vV.w9fx/xKMsnw0AWEb5X0:|' /etc/shadow
+
+exit 0

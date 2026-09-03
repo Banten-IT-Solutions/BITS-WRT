@@ -9,14 +9,15 @@
 </div>
 <hr/>
 
-**All Username & Password:**
+**Default Login:**
 ```
-  - LuCi : root > bitswrt
-  - Wifi : BITS-WRT > 12345678
+  - IP       : 20.20.20.20
+  - Hostname : bits-wrt
+  - LuCi     : root > bitswrt
 ```
 **Note:**
 ```
-  - Saat pertama kali booting tunggu sekitar 2-5 menit, lalu cabut/colok ulang adaptor
-  - Jika sudah bisa masuk kehalaman LuCi tapi wifi masih off coba direstart WiFi nya
-  - FW ini tested di STB B860H V1 dan HG680-P, Aman tanpa kendala
+  - Tanpa WiFi (ethernet only)
+  - Tested di STB B860H V1 dan HG680-P
+  - Install ke eMMC: System → Amlogic Service → Install OpenWrt
 ```
