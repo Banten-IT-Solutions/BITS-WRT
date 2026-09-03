@@ -40,7 +40,6 @@ on:
         type: choice
         options:
           - latest
-          - 24.10.4
 
 jobs:
   build:
