@@ -1,4 +1,4 @@
-# Copyright (C) 2024 Maizil41 https://github.com/maizil41
+# Copyright (C) 2026 Banten-IT-Solutions https://github.com/Banten-IT-Solutions
 # https://github.com/ophub/amlogic-s9xxx-openwrt
 
 name: Artifact Only
@@ -39,7 +39,7 @@ jobs:
           if [ -d "amlogic-s9xxx-old" ]; then
             rm -rf amlogic-s9xxx-old
           fi
-          git clone --depth 1 https://github.com/maizil41/amlogic-s9xxx-old.git
+          git clone --depth 1 https://github.com/Banten-IT-Solutions/amlogic-s9xxx-old.git
           cd amlogic-s9xxx-old
           mkdir -p openwrt-armvirt
     

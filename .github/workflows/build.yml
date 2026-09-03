@@ -1,5 +1,5 @@
-# Copyright (C) 2024 Maizil41 https://github.com/maizil41
-# https://github.com/maizil41/amlogic-s9xxx-openwrt
+# Copyright (C) 2026 Banten-IT-Solutions https://github.com/Banten-IT-Solutions
+# https://github.com/ophub/amlogic-s9xxx-openwrt
 
 name: Build OpenWrt
 on:

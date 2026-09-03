@@ -1,5 +1,5 @@
 #!/bin/bash
-#script fix upload coova-chilli by @maizil41 <https://t.me/maizil41>
+#script fix upload coova-chilli by Banten-IT-Solutions
 
 USERNAME=$1
 IPADDRES=$2
