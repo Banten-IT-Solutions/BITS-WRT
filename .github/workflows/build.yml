@@ -13,16 +13,6 @@ on:
         options:
           - HG680-P
           - B860H
-      kernel_version:
-        description: 'Select kernel version'
-        required: true
-        default: '5.15.y'
-        type: choice
-        options:
-          - 5.10.y
-          - 5.15.y
-          - 6.1.y
-          - 6.6.y
       rootfs_size:
         description: 'Select Rootfs Size'
         required: true
@@ -82,7 +72,7 @@ jobs:
       - name: ⚙️ Compile
         run: |
           cd amlogic-s9xxx-openwrt
-          sudo ./remake -b ${{ env.BOARD }} -k ${{ github.event.inputs.kernel_version }} -s ${{ github.event.inputs.rootfs_size }}
+          sudo ./remake -b ${{ env.BOARD }} -s ${{ github.event.inputs.rootfs_size }}
 
       - name: 🔍 Locate Image
         run: |
@@ -105,7 +95,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
         with:
           name: BITS-WRT ${{ env.VER }} (${{ github.event.inputs.board_version }})
-          tag_name: v${{ env.VER }}_k${{ github.event.inputs.kernel_version }}_${{ github.event.inputs.board_version }}
+          tag_name: v${{ env.VER }}_${{ github.event.inputs.board_version }}
           draft: false
           prerelease: false
           files: |
