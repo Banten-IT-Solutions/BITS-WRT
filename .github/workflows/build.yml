@@ -34,11 +34,12 @@ on:
           - 1024
           - 1536
       openwrt_ver:
-        description: 'Select OpenWrt Version'
+        description: 'OpenWrt version (latest = auto-detect)'
         required: true
-        default: '23.05.5'
+        default: 'latest'
         type: choice
         options:
+          - latest
           - 23.05.5
           - 24.10.4
 
@@ -60,13 +61,22 @@ jobs:
           cp -r files/files/. amlogic-s9xxx-openwrt/config/imagebuilder/files/
           printf 'CONFIG_PACKAGE_luci-theme-material=y\n' > amlogic-s9xxx-openwrt/config/imagebuilder/config
 
+      - name: 🏷️ Resolve Version
+        run: |
+          VER="${{ github.event.inputs.openwrt_ver }}"
+          if [ "$VER" = "latest" ]; then
+            VER=$(curl -s https://downloads.openwrt.org/releases/ | grep -oE 'href="[0-9]+\.[0-9]+\.[0-9]+/"' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n1)
+          fi
+          echo "VER=$VER" >> $GITHUB_ENV
+          echo "Resolved OpenWrt version: $VER"
+
       - name: 🍞 Bake Rootfs
         run: |
           sudo apt-get update -y >/dev/null
           sudo apt-get install -y zstd make >/dev/null
           cd amlogic-s9xxx-openwrt
           chmod +x config/imagebuilder/imagebuilder.sh
-          ./config/imagebuilder/imagebuilder.sh openwrt:${{ github.event.inputs.openwrt_ver }}
+          ./config/imagebuilder/imagebuilder.sh openwrt:${{ env.VER }}
 
       - name: 📥 Stage Rootfs
         run: |
@@ -106,8 +116,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
         with:
-          name: BITS-WRT ${{ github.event.inputs.openwrt_ver }} (${{ github.event.inputs.board_version }})
-          tag_name: v${{ github.event.inputs.openwrt_ver }}_k${{ github.event.inputs.kernel_version }}_${{ github.event.inputs.board_version }}
+          name: BITS-WRT ${{ env.VER }} (${{ github.event.inputs.board_version }})
+          tag_name: v${{ env.VER }}_k${{ github.event.inputs.kernel_version }}_${{ github.event.inputs.board_version }}
           draft: false
           prerelease: false
           files: |
