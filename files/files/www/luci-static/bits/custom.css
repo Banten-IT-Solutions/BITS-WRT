@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+	--main-color:#0e7490;
+	--ink:#1c1917;
+	--paper:#f5f2ea;
+	--card:#fdfcf9;
+	--line:#e4ded0;
+
+	--header-bg:var(--paper);
+	--header-color:var(--ink);
+	--bar-bg:var(--main-color);
+	--menu-bg-color:var(--card);
+	--menu-color:#57534e;
+	--menu-color-hover:var(--ink);
+	--main-menu-color:var(--ink);
+	--submenu-bg-hover:var(--paper);
+	--submenu-bg-hover-active:var(--main-color);
+	--font-body:'JetBrains Mono','Fira Code','SF Mono',Consolas,'Courier New',monospace;
+	--font-serif:'Instrument Serif',Georgia,'Times New Roman',serif;
+}
+
+html,body{background-color:var(--paper);color:var(--ink);}
+
+header{
+	box-shadow:none;
+	border-bottom:1px solid var(--line);
+}
+header>.fill>.container>#logo>img{height:2.6rem;width:auto;}
+
+.main-right{background-color:var(--paper);}
+
+h1,h2,h3,h4,h5,h6,
+.panel-title,
+.main>.main-left>.nav>li>[data-title],
+.cbi-section>h3,
+.cbi-section>h4,
+.cbi-tabmenu>li>a{
+	font-family:var(--font-serif);
+	font-weight:400;
+}
+
+.cbi-section,.cbi-section-error,
+[data-tab-title],
+.panel-title,
+.container .alert,.container .alert-message{
+	border:1px solid var(--line);
+	border-radius:6px;
+}
+
+.btn,.cbi-button{font-family:var(--font-body);font-weight:500;border-radius:4px;}
+
+footer{color:var(--menu-color);}
+footer>a,footer span{font-family:var(--font-serif);}

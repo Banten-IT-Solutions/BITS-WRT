@@ -1,0 +1,11 @@
+#!/bin/sh
+# BITS theme — single theme only
+uci -q set luci.themes='internal'
+uci -q set luci.themes.BITS='/luci-static/bits'
+uci -q delete luci.themes.Bootstrap
+uci -q delete luci.themes.BootstrapDark
+uci -q delete luci.themes.BootstrapLight
+uci -q delete luci.themes.Material
+uci -q set luci.main.mediaurlbase='/luci-static/bits'
+uci commit luci
+exit 0

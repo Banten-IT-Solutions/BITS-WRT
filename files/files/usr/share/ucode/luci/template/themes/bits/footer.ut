@@ -1,0 +1,15 @@
+{#
+	BITS theme for LuCI — paper / classic / terminal
+	Based on luci-theme-material (Apache-2.0)
+	Crafted by Banten-IT-Solutions
+-#}
+
+			</div>
+			<footer class="mobile-hide">
+				<span>BITS-WRT</span> &middot; {{ version.distversion }}
+			</footer>
+		</div>
+	</div>
+
+</body>
+</html>
