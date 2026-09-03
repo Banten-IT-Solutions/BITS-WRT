@@ -137,10 +137,10 @@ custom_packages() {
     # Download momo (mihomo) from custom feed
     if [[ -n "${MOMO_FEED}" ]]; then
         momo_idx="$(curl -fsSL "${MOMO_FEED}/index.json")"
-        momo_v="$(echo "${momo_idx}" | grep -oE '"momo":"[^"]*"' | cut -d'"' -f4)"
-        momo_luci_v="$(echo "${momo_idx}" | grep -oE '"luci-app-momo":"[^"]*"' | cut -d'"' -f4)"
-        [[ -n "${momo_v}" ]] && curl -fsSL -O "${MOMO_FEED}/momo-${momo_v}.apk"
-        [[ -n "${momo_luci_v}" ]] && curl -fsSL -O "${MOMO_FEED}/luci-app-momo-${momo_luci_v}.apk"
+        momo_v="$(echo "${momo_idx}" | jq -r '.packages.momo')"
+        momo_luci_v="$(echo "${momo_idx}" | jq -r '.packages["luci-app-momo"]')"
+        [[ -n "${momo_v}" && "${momo_v}" != "null" ]] && curl -fsSL -O "${MOMO_FEED}/momo-${momo_v}.apk"
+        [[ -n "${momo_luci_v}" && "${momo_luci_v}" != "null" ]] && curl -fsSL -O "${MOMO_FEED}/luci-app-momo-${momo_luci_v}.apk"
         echo -e "${INFO} momo: [ ${momo_v} ], luci-app-momo: [ ${momo_luci_v} ]"
     fi
 
