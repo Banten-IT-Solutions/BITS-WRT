@@ -44,6 +44,8 @@ jobs:
           cp -f patch/openwrt-tf "$SBIN/"
           chmod +x "$SBIN/openwrt-install-amlogic" "$SBIN/openwrt-tf"
           cp -f patch/imagebuilder.sh amlogic-s9xxx-openwrt/config/imagebuilder/imagebuilder.sh
+          # coreutils 8.32 (jammy) lacks --update=none (9.x only); use -n equivalent
+          sed -i 's/--update=none/-n/g' amlogic-s9xxx-openwrt/remake
 
       - name: 🏷️ Resolve Version
         run: |
