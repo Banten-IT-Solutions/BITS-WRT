@@ -82,7 +82,7 @@ jobs:
 
       - name: 🔍 Locate Image
         run: |
-          FILE_PATH=$(find ./amlogic-s9xxx-openwrt/openwrt/out/ -name "*.img.gz")
+          FILE_PATH=$(find ./amlogic-s9xxx-openwrt/openwrt/out/ -name "*.img.gz" | sort -V | tail -n1)
           if [[ -z "$FILE_PATH" ]]; then
             echo "Error: Tidak ada file firmware ditemukan!"
             exit 1
