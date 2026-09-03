@@ -1,1 +1,1 @@
-export const revision = 'Hotspot', branch = 'Radius';
+export const revision = 'BITS-WRT', branch = 'OpenWrt';

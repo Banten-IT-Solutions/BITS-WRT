@@ -109,26 +109,5 @@
 		"depends": {
 			"acl": [ "luci-mod-status-processes" ]
 		}
-	},
-
-	"admin/status/realtime": {
-		"title": "Net Monitor",
-		"order": 7,
-		"action": {
-			"type": "template",
-			"path": "netmon"
-		},
-		"depends": {
-			"acl": [ "luci-mod-status-realtime" ]
-		}
-	},
-
-	"admin/status/realtime/connections": {
-		"title": "Connections",
-		"order": 4,
-		"action": {
-			"type": "view",
-			"path": "status/connections"
-		}
 	}
 }

@@ -25,9 +25,7 @@
 			</footer>
 		</div>
 	</div>
-    <div id="tempcpu"></div>
-    <div id="cpuusage"></div>
-	<script type="text/javascript">L.require('menu-material')</script>
+    <script type="text/javascript">L.require('menu-material')</script>
 
 </body>
 </html>

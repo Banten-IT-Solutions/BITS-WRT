@@ -268,11 +268,7 @@ jobs:
             * Default WIFI password: 12345678
             * Release date: ${{ env.date_time }}
             
-            ### Tools Installed
-            * Radius Monitor
-            * OpenClash v0.46.046-beta
-            * WhatsApp Bot
-            * and others
+            
 
   build_all:
     name: Build All
@@ -362,8 +358,4 @@ jobs:
             * Default WIFI password: 12345678
             * Release date: ${{ env.date_time }}
             
-            ### Tools Installed
-            * Radius Monitor
-            * OpenClash v0.46.046-beta
-            * WhatsApp Bot
-            * and others
+            

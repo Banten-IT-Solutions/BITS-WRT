@@ -57,34 +57,6 @@ function renderBadge(icon, title) {
 		include('admin_status/luaindex');
 %}
 </div>
-<script type="text/javascript">//<![CDATA[
-	window.setTimeout(
-		function() {
-			XHR.poll(3, '{{ dispatcher.build_url("admin/status/realtime/temperature1") }}', null,
-				function(x, json)
-				{
-					if (e = document.getElementById('tempcpu'))
-						e.innerHTML = String.format('%1f&deg;C', json[0].cpu / 1000);
-				}
-			);
-			XHR.run();
-		}
-	);
-//]]></script>
-<script type="text/javascript">//<![CDATA[
-	window.setTimeout(
-		function() {
-			XHR.poll(3, '{{ dispatcher.build_url("admin/status/realtime/cpuusage1") }}', null,
-				function(x, json)
-				{
-					if (e = document.getElementById('cpuusage'))
-						e.innerHTML = String.format('%1f %', json[0].cpu / 1);
-				}
-			);
-			XHR.run();
-		}
-	);
-//]]></script>
 <script type="text/javascript">
 	L.require('ui').then(function(ui) {
 		ui.instantiateView('status/index');
