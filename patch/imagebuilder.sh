@@ -268,6 +268,7 @@ custom_settings() {
         release_file="${unpack_path}/etc/openwrt_release"
         if [[ -f "${release_file}" ]]; then
             echo -e "${INFO} Updating etc/openwrt_release..."
+            sed -i "s|^DISTRIB_DESCRIPTION=.*|DISTRIB_DESCRIPTION='BITS-WRT ${op_branch}'|" "${release_file}"
             {
                 echo "DISTRIB_SOURCEREPO='github.com/${op_sourse}/${op_sourse}'"
                 echo "DISTRIB_SOURCECODE='${op_sourse}'"

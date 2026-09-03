@@ -1,4 +1,5 @@
 <div align="center">
+  <img src="files/files/www/luci-static/material/logo.svg" alt="BITS-WRT" width="150">
   <h1>BITS-WRT</h1>
 </div>
 
@@ -19,5 +20,5 @@
 ```
   - Tanpa WiFi (ethernet only)
   - Tested di STB B860H V1 dan HG680-P
-  - Install ke eMMC: System → Amlogic Service → Install OpenWrt
+  - Install ke eMMC: System → BITS Service → Install OpenWrt
 ```
