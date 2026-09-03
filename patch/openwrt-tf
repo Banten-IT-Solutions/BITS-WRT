@@ -1,0 +1,51 @@
+#!/bin/bash
+#===========================================================================
+# BITS-WRT: single-partition expansion (p1 boot, p2 rootfs = rest of disk)
+# Patched from ophub/amlogic-s9xxx-openwrt openwrt-tf
+# Grows partition 2 (rootfs) to 100% instead of creating p3/p4.
+#===========================================================================
+
+todo_rootfs_resize="/root/.todo_rootfs_resize"
+
+error_msg() {
+    echo -e "[ERROR] ${1}"
+    exit 1
+}
+
+# Find disk device from the root (/) mount.
+ROOT_PTNAME="$(df / | tail -n1 | awk '{print $1}' | awk -F '/' '{print $3}')"
+[[ -z "${ROOT_PTNAME}" ]] && error_msg "Unable to determine root partition!"
+
+case "${ROOT_PTNAME}" in
+mmcblk?p[0-9]*)
+    DISK_NAME=$(echo "${ROOT_PTNAME}" | sed -E 's/p[0-9]+$//')
+    ;;
+[hsv]d[a-z][0-9]*)
+    DISK_NAME=$(echo "${ROOT_PTNAME}" | sed -E 's/[0-9]+$//')
+    ;;
+nvme?n?p[0-9]*)
+    DISK_NAME=$(echo "${ROOT_PTNAME}" | sed -E 's/p[0-9]+$//')
+    ;;
+*)
+    error_msg "Unrecognized disk type: ${ROOT_PTNAME}"
+    ;;
+esac
+
+ROOT_NUM="$(echo "${ROOT_PTNAME}" | grep -oE '[0-9]+$')"
+[[ -z "${ROOT_NUM}" ]] && error_msg "Unable to determine root partition number!"
+
+echo "Resizing /dev/${DISK_NAME} partition ${ROOT_NUM} to 100%."
+
+# Grow partition to 100% of disk (idempotent: no-op if already full).
+parted -s "/dev/${DISK_NAME}" resizepart "${ROOT_NUM}" 100% 2>/dev/null || {
+    error_msg "parted resizepart failed"
+}
+
+sleep 2
+
+# Grow btrfs filesystem to max (safe online resize).
+btrfs filesystem resize max / 2>/dev/null || true
+
+rm -f "${todo_rootfs_resize}"
+echo "Partition expansion complete."
+exit 0

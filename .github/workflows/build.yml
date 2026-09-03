@@ -31,6 +31,13 @@ on:
           cp -r files/files/. amlogic-s9xxx-openwrt/config/imagebuilder/files/
           printf 'CONFIG_PACKAGE_luci-theme-material=y\n' > amlogic-s9xxx-openwrt/config/imagebuilder/config
 
+      - name: 🧩 Patch Partition
+        run: |
+          SBIN=amlogic-s9xxx-openwrt/make-openwrt/openwrt-files/common-files/usr/sbin
+          cp -f patch/openwrt-install-amlogic "$SBIN/"
+          cp -f patch/openwrt-tf "$SBIN/"
+          chmod +x "$SBIN/openwrt-install-amlogic" "$SBIN/openwrt-tf"
+
       - name: 🏷️ Resolve Version
         run: |
           VER=$(curl -s https://downloads.openwrt.org/releases/ | grep -oE 'href="[0-9]+\.[0-9]+\.[0-9]+/"' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n1)
