@@ -278,6 +278,12 @@ custom_settings() {
             error_msg "${release_file} not found."
         fi
 
+        # Rebrand the amlogic service menu (drift-proof: applied on the installed ipk)
+        amlogic_menu="${unpack_path}/usr/share/luci/menu.d/luci-app-amlogic.json"
+        if [[ -f "${amlogic_menu}" ]]; then
+            sed -i 's/Amlogic Service/BITS Service/g' "${amlogic_menu}"
+        fi
+
         # Repack the modified root filesystem
         echo -e "${INFO} Repacking into ${original_filename}..."
         (cd "${unpack_path}" && tar -czpf "${tmp_path}/${original_filename}" ./)
