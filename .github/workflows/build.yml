@@ -33,13 +33,6 @@ on:
           - 512
           - 1024
           - 1536
-      openwrt_ver:
-        description: 'OpenWrt version (latest = auto-detect)'
-        required: true
-        default: 'latest'
-        type: choice
-        options:
-          - latest
 
 jobs:
   build:
@@ -61,10 +54,7 @@ jobs:
 
       - name: 🏷️ Resolve Version
         run: |
-          VER="${{ github.event.inputs.openwrt_ver }}"
-          if [ "$VER" = "latest" ]; then
-            VER=$(curl -s https://downloads.openwrt.org/releases/ | grep -oE 'href="[0-9]+\.[0-9]+\.[0-9]+/"' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n1)
-          fi
+          VER=$(curl -s https://downloads.openwrt.org/releases/ | grep -oE 'href="[0-9]+\.[0-9]+\.[0-9]+/"' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n1)
           echo "VER=$VER" >> $GITHUB_ENV
           echo "Resolved OpenWrt version: $VER"
 
