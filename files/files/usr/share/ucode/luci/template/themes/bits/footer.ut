@@ -6,10 +6,13 @@
 
 			</div>
 			<footer class="mobile-hide">
-				<span>BITS-WRT</span> &middot; {{ version.distversion }}
+				<span>BITS-WRT</span> &middot; {{ version.distversion }} | {{ version.luciname }} {{ version.luciversion }}
 			</footer>
 		</div>
 	</div>
+    <div id="tempcpu"></div>
+    <div id="cpuusage"></div>
+	<script type="text/javascript">L.require('menu-material')</script>
 
 </body>
 </html>

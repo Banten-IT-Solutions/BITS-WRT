@@ -1,52 +1,85 @@
-:root{
-	--main-color:#0e7490;
-	--ink:#1c1917;
-	--paper:#f5f2ea;
-	--card:#fdfcf9;
-	--line:#e4ded0;
+:root {
+    --white-color: #fff;
+    --white-color-low: #f9f9f9;
+    --black-color: #1c1917;
+    --black-color-low: #292524;
+    --yellow-color: #d97706;
+    --yellow-color-high: #b45309;
+    --on-yellow-color: var(--white-color);
+    --red-color: #b91c1c;
+    --red-color-high: #7f1d1d;
+    --on-red-color: var(--white-color);
+    --green-color: #15803d;
+    --green-color-high: #166534;
+    --on-green-color: var(--white-color);
+    --dark-blue-color: #0e7490;
+    --dark-blue-color-high: #155e75;
+    --on-dark-blue-color: var(--white-color);
+    --gray-color: #e7e5e4;
+    --gray-color-high: #d6d3d1;
+    --light-blue-color: #0e7490;
+    --light-blue-color-high: #0891b2;
+    --on-light-blue-color: var(--white-color);
 
-	--header-bg:var(--paper);
-	--header-color:var(--ink);
-	--bar-bg:var(--main-color);
-	--menu-bg-color:var(--card);
-	--menu-color:#57534e;
-	--menu-color-hover:var(--ink);
-	--main-menu-color:var(--ink);
-	--submenu-bg-hover:var(--paper);
-	--submenu-bg-hover-active:var(--main-color);
-	--font-body:ui-monospace,'Cascadia Mono','SF Mono',Consolas,'DejaVu Sans Mono','Liberation Mono',Menlo,monospace;
-	--font-serif:'Iowan Old Style','Palatino Linotype',Georgia,'Times New Roman',serif;
+    --main-color: #0e7490;
+    --secondary-color: #0891b2;
+    --paper: #f5f2ea;
+    --card: #fdfcf9;
+    --line: #e6e0d3;
+    --ink: #1c1917;
+
+    --header-bg: var(--paper);
+    --header-color: var(--ink);
+    --bar-bg: var(--main-color);
+    --menu-bg-color: var(--card);
+    --menu-color: #57534e;
+    --menu-color-hover: var(--ink);
+    --main-menu-color: var(--ink);
+    --submenu-bg-hover: var(--paper);
+    --submenu-bg-hover-active: var(--main-color);
+
+    --notice-color: #0e7490;
+    --on-notice-color: var(--white-color);
+    --danger-color: var(--red-color);
+    --on-danger-color: var(--on-red-color);
+    --warning-color: #f5e6bb;
+    --on-warning-color: var(--ink);
+    --success-color: var(--green-color);
+    --on-success-color: var(--on-green-color);
+    --error-color: #b91c1c;
+    --on-error-color: var(--white-color);
+
+    --font-body: ui-monospace, 'Cascadia Mono', 'SF Mono', Consolas, 'DejaVu Sans Mono', 'Liberation Mono', Menlo, monospace;
+    --font-serif: 'Iowan Old Style', 'Palatino Linotype', Georgia, 'Times New Roman', serif;
 }
 
-html,body{background-color:var(--paper);color:var(--ink);}
+html, body { background-color: var(--paper); color: var(--ink); }
 
-header{
-	box-shadow:none;
-	border-bottom:1px solid var(--line);
+header {
+    box-shadow: none;
+    border-bottom: 1px solid var(--line);
 }
-header>.fill>.container>#logo>img{height:2.6rem;width:auto;}
+header > .fill > .container > #logo > img { height: 2.6rem; width: auto; }
 
-.main-right{background-color:var(--paper);}
+.main-right { background-color: var(--paper); }
 
-h1,h2,h3,h4,h5,h6,
+h1, h2, h3, h4, h5, h6,
 .panel-title,
-.main>.main-left>.nav>li>[data-title],
-.cbi-section>h3,
-.cbi-section>h4,
-.cbi-tabmenu>li>a{
-	font-family:var(--font-serif);
-	font-weight:400;
+.main > .main-left > .nav > li > [data-title],
+.cbi-section > h3,
+.cbi-section > h4,
+.cbi-tabmenu > li > a {
+    font-family: var(--font-serif);
+    font-weight: 400;
 }
 
-.cbi-section,.cbi-section-error,
-[data-tab-title],
-.panel-title,
-.container .alert,.container .alert-message{
-	border:1px solid var(--line);
-	border-radius:6px;
+.cbi-section, .cbi-section-error, [data-tab-title],
+.panel-title, .container .alert, .container .alert-message {
+    border: 1px solid var(--line);
+    border-radius: 6px;
 }
 
-.btn,.cbi-button{font-family:var(--font-body);font-weight:500;border-radius:4px;}
+.btn, .cbi-button { font-family: var(--font-body); font-weight: 500; border-radius: 4px; }
 
-footer{color:var(--menu-color);}
-footer>a,footer span{font-family:var(--font-serif);}
+footer { color: var(--menu-color); }
+footer > a, footer span { font-family: var(--font-serif); }
