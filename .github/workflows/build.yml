@@ -13,18 +13,7 @@ on:
         options:
           - HG680-P
           - B860H
-      rootfs_size:
-        description: 'Select Rootfs Size'
-        required: true
-        default: '1024'
-        type: choice
-        options:
-          - 256
-          - 512
-          - 1024
-          - 1536
-
-jobs:
+      jobs:
   build:
     name: 🚀 Build ${{ github.event.inputs.board_version }}
     runs-on: ubuntu-22.04
@@ -72,7 +61,7 @@ jobs:
       - name: ⚙️ Compile
         run: |
           cd amlogic-s9xxx-openwrt
-          sudo ./remake -b ${{ env.BOARD }} -s ${{ github.event.inputs.rootfs_size }}
+          sudo ./remake -b ${{ env.BOARD }} -s 1024
 
       - name: 🔍 Locate Image
         run: |
