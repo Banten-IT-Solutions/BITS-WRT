@@ -6,13 +6,13 @@ on:
   workflow_dispatch:
     inputs:
       board_version:
-        description: 'Select board version to compile'
+        description: 'Select device to compile'
         required: true
-        default: 's905x'
+        default: 'HG680-P'
         type: choice
         options:
-          - s905x
-          - s905x-b860h
+          - HG680-P
+          - B860H
       kernel_version:
         description: 'Select kernel version'
         required: true
@@ -83,10 +83,18 @@ jobs:
           name: amlogic-rootfs
           path: ./amlogic-s9xxx-openwrt/openwrt-armsr/
 
+      - name: Resolve board target
+        run: |
+          case "${{ github.event.inputs.board_version }}" in
+            HG680-P) BOARD=s905x ;;
+            B860H)   BOARD=s905x-b860h ;;
+          esac
+          echo "BOARD=$BOARD" >> $GITHUB_ENV
+
       - name: Build Firmware ${{ github.event.inputs.board_version }} with Kernel ${{ github.event.inputs.kernel_version }}
         run: |
           cd amlogic-s9xxx-openwrt
-          sudo ./remake -b ${{ github.event.inputs.board_version }} -k ${{ github.event.inputs.kernel_version }} -s ${{ github.event.inputs.rootfs_size }}
+          sudo ./remake -b ${{ env.BOARD }} -k ${{ github.event.inputs.kernel_version }} -s ${{ github.event.inputs.rootfs_size }}
 
       - name: Find Firmware
         run: |
