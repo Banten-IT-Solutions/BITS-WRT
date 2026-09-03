@@ -178,9 +178,9 @@ print_machine() {
 	elif [ -e /proc/cpuinfo ]; then
 		Machine=$(awk 'BEGIN{FS="[ \t]+:[ \t]";OFS=""}/machine/{Machine=$2}/Hardware/{Hardware=$2}END{print Machine,(Machine!="" && Hardware!="")?" ":"",Hardware}' /proc/cpuinfo 2>/dev/null)
 	fi
-	echo "${NormalColor}Model  : $MachineColor$stb$NormalColor"
-	echo "${NormalColor}Arch   : $MachineColor$sys_tempx ${cpu_tempx}°C$NormalColor"
-	echo "${NormalColor}System : $MachineColor${os_version} ${os_revision}$NormalColor"
+	print_line "${NormalColor}Model  : $MachineColor$stb$NormalColor"
+	print_line "${NormalColor}Arch   : $MachineColor$sys_tempx ${cpu_tempx}°C$NormalColor"
+	print_line "${NormalColor}System : $MachineColor${os_version} ${os_revision}$NormalColor"
 }
 
 print_publicip() {
