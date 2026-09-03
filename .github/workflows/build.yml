@@ -40,7 +40,6 @@ on:
         type: choice
         options:
           - latest
-          - 23.05.5
           - 24.10.4
 
 jobs:
