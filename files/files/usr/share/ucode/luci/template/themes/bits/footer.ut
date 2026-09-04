@@ -6,7 +6,8 @@
 
 			</div>
 			<footer class="mobile-hide">
-				<span>BITS-WRT</span> &middot; {{ version.distversion }} | {{ version.luciname }} {{ version.luciversion }}
+				<span>BITS-WRT</span> &middot; {{ version.distversion }} &middot; {{ _('Minimal router · Tailscale & Singbox') }}<br>
+				<a href="https://github.com/Banten-IT-Solutions/BITS-WRT" target="_blank">Banten IT Solutions</a>
 			</footer>
 		</div>
 	</div>

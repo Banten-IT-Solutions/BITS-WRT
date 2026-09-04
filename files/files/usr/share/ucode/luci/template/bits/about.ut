@@ -1,0 +1,46 @@
+{#
+	BITS-WRT About page
+	Paper / Classic / Terminal — Banten-IT-Solutions
+-#}
+
+{%
+	const boardinfo = ubus.call('system', 'board');
+-%}
+
+{% include('header') %}
+
+<h2 name="content">{{ _('About') }}</h2>
+
+<div class="bits-about">
+	<div class="tagline">{{ _('Minimal router · Tailscale & Singbox') }}</div>
+
+	<dl>
+		<dt>{{ _('Firmware') }}</dt>
+		<dd>BITS-WRT {{ version.distversion }}</dd>
+
+		<dt>{{ _('Hostname') }}</dt>
+		<dd>{{ boardinfo?.hostname ?? 'bits-wrt' }}</dd>
+
+		<dt>{{ _('Model') }}</dt>
+		<dd>{{ boardinfo?.model ?? 'Amlogic S9xx' }}</dd>
+
+		<dt>{{ _('Architecture') }}</dt>
+		<dd>{{ boardinfo?.system ?? 'aarch64' }}</dd>
+
+		<dt>{{ _('Kernel') }}</dt>
+		<dd>{{ boardinfo?.kernel ?? '—' }}</dd>
+
+		<dt>{{ _('Base system') }}</dt>
+		<dd>{{ version.luciname }} {{ version.luciversion }}</dd>
+	</dl>
+
+	<p class="footer-note">
+		{{ _('BITS-WRT is a minimal OpenWrt firmware for Amlogic TV boxes. No hotspot, no billing, no WiFi — just a clean router with Tailscale &amp; Singbox baked-in.') }}
+		&middot;
+		<a href="https://github.com/Banten-IT-Solutions/BITS-WRT" target="_blank">{{ _('Source on GitHub') }}</a>
+		&middot;
+		<a href="https://github.com/Banten-IT-Solutions" target="_blank">{{ _('Banten IT Solutions') }}</a>
+	</p>
+</div>
+
+{% include('footer') %}

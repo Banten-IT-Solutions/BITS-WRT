@@ -112,6 +112,19 @@ jobs:
           export TZ='Asia/Jakarta'
           echo "date_time=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
+      - name: 📝 Changelog
+        run: |
+          {
+            echo "### Changelog"
+            git log --oneline --no-merges -15 | sed 's/^/- /'
+            echo ""
+            echo "### BITS-WRT Information"
+            echo "* Default IP: 20.20.20.20"
+            echo "* Default username: root"
+            echo "* Default password: bitswrt"
+            echo "* Release date: ${{ env.date_time }}"
+          } > /tmp/RELEASE_BODY.md
+
       - name: 🚀 Publish
         uses: softprops/action-gh-release@v2
         env:
@@ -123,9 +136,4 @@ jobs:
           prerelease: false
           files: |
                 ${{ env.FILE_PATH }}
-          body: |
-            ### BITS-WRT Information
-            * Default IP: 20.20.20.20
-            * Default username: root
-            * Default password: bitswrt
-            * Release date: ${{ env.date_time }}
+          body_path: /tmp/RELEASE_BODY.md

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="BITS-WRT">
+  <!-- Adaptive: subtle light ring only in dark contexts so the tile
+       never blends into a dark browser tab. -->
+  <style>
+    .ring { stroke: transparent; stroke-width: 3; }
+    @media (prefers-color-scheme: dark) {
+      .ring { stroke: #e6f7f8; stroke-opacity: .4; }
+    }
+  </style>
+  <rect class="ring" x="2.5" y="2.5" width="59" height="59" rx="14.5" fill="none"/>
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="#0e7490"/>
+  <polyline points="23,22 35,32 23,42" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="38" y="39" width="10" height="9" rx="2.5" fill="#ffffff"/>
+</svg>

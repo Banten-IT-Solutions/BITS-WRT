@@ -1,0 +1,13 @@
+{
+	"admin/status/about": {
+		"title": "About",
+		"order": 50,
+		"action": {
+			"type": "template",
+			"path": "bits/about"
+		},
+		"depends": {
+			"acl": [ "luci-mod-status-index" ]
+		}
+	}
+}

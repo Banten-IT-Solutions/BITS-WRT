@@ -1,68 +1,113 @@
+/* ============================================================
+   BITS-WRT theme — override layer (loaded AFTER cascade.css)
+   Concept: Paper / Classic / Terminal
+   Brand: Banten IT Solutions
+   ============================================================ */
+
 :root {
-    --white-color: #fff;
-    --white-color-low: #f9f9f9;
-    --black-color: #1c1917;
-    --black-color-low: #292524;
-    --yellow-color: #d97706;
-    --yellow-color-high: #b45309;
-    --on-yellow-color: var(--white-color);
-    --red-color: #b91c1c;
-    --red-color-high: #7f1d1d;
-    --on-red-color: var(--white-color);
-    --green-color: #15803d;
-    --green-color-high: #166534;
-    --on-green-color: var(--white-color);
-    --dark-blue-color: #0e7490;
-    --dark-blue-color-high: #155e75;
-    --on-dark-blue-color: var(--white-color);
-    --gray-color: #e7e5e4;
-    --gray-color-high: #d6d3d1;
-    --light-blue-color: #0e7490;
-    --light-blue-color-high: #0891b2;
-    --on-light-blue-color: var(--white-color);
+    /* --- Brand accent (single, unified) --- */
+    --accent:          #0e7490;   /* primary teal */
+    --accent-high:     #155e75;   /* hover / active */
+    --accent-low:      #0891b2;   /* secondary teal */
+    --accent-soft:     #ecfeff;   /* tint background */
+    --accent-on:       #ffffff;   /* text on accent */
 
-    --main-color: #0e7490;
-    --secondary-color: #0891b2;
-    --paper: #f5f2ea;
-    --card: #fdfcf9;
-    --line: #e6e0d3;
-    --ink: #1c1917;
+    /* --- Paper surfaces --- */
+    --paper:        #f5f2ea;
+    --card:         #fdfcf9;
+    --line:         #e6e0d3;
+    --ink:          #1c1917;   /* near-black, strong contrast on paper */
+    --ink-soft:     #57534e;   /* body secondary */
+    --ink-faint:    #78716c;   /* muted, still AA on card */
 
-    --header-bg: var(--paper);
-    --header-color: var(--ink);
-    --bar-bg: var(--main-color);
-    --menu-bg-color: var(--card);
-    --menu-color: #57534e;
-    --menu-color-hover: var(--ink);
-    --main-menu-color: var(--ink);
-    --submenu-bg-hover: var(--paper);
-    --submenu-bg-hover-active: var(--main-color);
+    /* --- Back-compat tokens used by cascade.css --- */
+    --white-color:          #fdfcf9;
+    --white-color-low:      #f9f7f2;
+    --black-color:          #1c1917;
+    --black-color-low:      #292524;
+    --gray-color:           #eee9de;
+    --gray-color-high:      #ddd6c8;
 
-    --notice-color: #0e7490;
-    --on-notice-color: var(--white-color);
-    --danger-color: var(--red-color);
-    --on-danger-color: var(--on-red-color);
-    --warning-color: #f5e6bb;
-    --on-warning-color: var(--ink);
-    --success-color: var(--green-color);
-    --on-success-color: var(--on-green-color);
-    --error-color: #b91c1c;
-    --on-error-color: var(--white-color);
+    --main-color:           var(--accent);
+    --secondary-color:      var(--accent-low);
+    --dark-blue-color:      var(--accent);
+    --dark-blue-color-high: var(--accent-high);
+    --light-blue-color:     var(--accent-low);
+    --light-blue-color-high:var(--accent);
 
-    --font-body: ui-monospace, 'Cascadia Mono', 'SF Mono', Consolas, 'DejaVu Sans Mono', 'Liberation Mono', Menlo, monospace;
+    --yellow-color:         #d97706;
+    --yellow-color-high:    #b45309;
+    --on-yellow-color:      #ffffff;
+    --red-color:            #b91c1c;
+    --red-color-high:       #7f1d1d;
+    --on-red-color:         #ffffff;
+    --green-color:          #15803d;
+    --green-color-high:     #166534;
+    --on-green-color:       #ffffff;
+
+    --on-dark-blue-color:   #ffffff;
+    --on-light-blue-color:  #ffffff;
+
+    /* --- Header / nav --- */
+    --header-bg:            var(--paper);
+    --header-color:         var(--ink);
+    --bar-bg:               var(--accent);
+    --menu-bg-color:        var(--card);
+    --menu-color:           var(--ink-soft);
+    --menu-color-hover:     var(--ink);
+    --main-menu-color:      var(--ink);
+    --submenu-bg-hover:     var(--paper);
+    --submenu-bg-hover-active: var(--accent);
+
+    /* --- Semantic --- */
+    --notice-color:         var(--accent);
+    --on-notice-color:      var(--accent-on);
+    --danger-color:         var(--red-color);
+    --on-danger-color:      var(--on-red-color);
+    --warning-color:        #f5e6bb;
+    --on-warning-color:     var(--ink);
+    --success-color:        var(--green-color);
+    --on-success-color:     var(--on-green-color);
+    --error-color:          var(--red-color);
+    --on-error-color:       #ffffff;
+
+    /* --- Type --- */
+    --font-body:  ui-monospace, 'Cascadia Mono', 'SF Mono', Consolas, 'DejaVu Sans Mono', 'Liberation Mono', Menlo, monospace;
     --font-serif: 'Iowan Old Style', 'Palatino Linotype', Georgia, 'Times New Roman', serif;
 }
 
-html, body { background-color: var(--paper); color: var(--ink); }
+/* Color-scheme declaration so UA widgets render light */
+html { color-scheme: light; }
 
+html, body {
+    background-color: var(--paper);
+    color: var(--ink);
+}
+
+/* --- Contrast guarantees: text never equals its background --- */
+a { color: var(--accent); }
+a:hover { color: var(--accent-high); }
+footer, footer > a {
+    color: var(--ink-soft);
+    text-shadow: none;
+}
+.cbi-map-descr, .cbi-section-descr { color: var(--ink-soft); }
+.tabs > li > a, .cbi-tabmenu > li > a, .cbi-section > h3:first-child, .panel-title { color: var(--ink); }
+.cbi-value-description { color: var(--ink-soft); opacity: 1; }
+
+/* --- Header: flat paper, no heavy shadow --- */
 header {
     box-shadow: none;
     border-bottom: 1px solid var(--line);
+    background: var(--header-bg);
+    color: var(--header-color);
 }
 header > .fill > .container > #logo > img { height: 2.6rem; width: auto; }
+header > .fill > .container > .brand { color: var(--header-color); }
 
 .main-right { background-color: var(--paper); }
 
+/* --- Headings: serif (paper/classic feel) --- */
 h1, h2, h3, h4, h5, h6,
 .panel-title,
 .main > .main-left > .nav > li > [data-title],
@@ -71,15 +116,112 @@ h1, h2, h3, h4, h5, h6,
 .cbi-tabmenu > li > a {
     font-family: var(--font-serif);
     font-weight: 400;
+    color: var(--ink);
 }
 
+/* --- Cards: paper line instead of clunky shadow --- */
 .cbi-section, .cbi-section-error, [data-tab-title],
 .panel-title, .container .alert, .container .alert-message {
     border: 1px solid var(--line);
     border-radius: 6px;
+    background-color: var(--card);
+    box-shadow: 0 1px 2px rgba(28,25,23,.06);
+}
+.btn, .cbi-button { font-family: var(--font-body); font-weight: 500; border-radius: 4px; }
+.btn, .cbi-button { color: var(--ink); }
+
+/* --- Primary / apply actions → unified accent --- */
+.btn.primary,
+.cbi-page-actions .cbi-button-save,
+.cbi-button-add,
+.cbi-button-save,
+.cbi-button-positive,
+.cbi-button-apply,
+.cbi-button-action {
+    color: var(--accent-on);
+    background-color: var(--accent);
+    border: thin solid var(--accent-high);
+}
+.cbi-button:hover { box-shadow: none; }
+
+/* --- Footer --- */
+footer { color: var(--ink-soft); font-family: var(--font-serif); }
+footer > a { color: var(--accent); }
+
+/* ============================================================
+   Login page — Paper card + terminal prompt accent
+   ============================================================ */
+.node-main-login > .main .container {
+    background-color: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(28,25,23,.08);
+    padding: 2rem 3.5rem 2.5rem;
+    position: relative;
+}
+/* Brand tagline injected above the form */
+.node-main-login > .main .container::before {
+    content: "Minimal router · Tailscale & Singbox";
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--accent);
+    text-align: center;
+    margin: 0 0 1.25rem;
+}
+.node-main-login > .main .cbi-value-title { color: var(--ink); }
+.node-main-login > .main .cbi-input-text,
+.node-main-login > .main .cbi-input-password {
+    color: var(--ink);
+    background: transparent;
+    border-bottom: 2px solid var(--ink-soft);
+}
+.node-main-login > .main .cbi-input-text:focus,
+.node-main-login > .main .cbi-input-password:focus {
+    border-bottom-color: var(--accent);
+}
+.node-main-login .cbi-button { background-color: var(--accent); color: var(--accent-on); border-radius: 4px; }
+
+/* ============================================================
+   Error / warning — consistent themed surfaces
+   ============================================================ */
+.alert-message.error, .btn.error, .label.error {
+    background-color: var(--error-color);
+    color: var(--on-error-color);
+    border: 1px solid var(--red-color-high);
+}
+.alert-message.danger, .btn.danger, .label.danger {
+    background-color: var(--danger-color);
+    color: var(--on-danger-color);
+}
+.alert-message.warning { background-color: var(--warning-color); color: var(--on-warning-color); }
+.alert-message.success { background-color: var(--success-color); color: var(--on-success-color); }
+.alert-message.notice { background-color: var(--notice-color); color: var(--on-notice-color); }
+.cbi-section-error {
+    color: var(--error-color);
+    border: 1px solid var(--error-color);
+    background-color: #fdf0f0;
 }
 
-.btn, .cbi-button { font-family: var(--font-body); font-weight: 500; border-radius: 4px; }
-
-footer { color: var(--menu-color); }
-footer > a, footer span { font-family: var(--font-serif); }
+/* ============================================================
+   About page
+   ============================================================ */
+.bits-about {
+    max-width: 44rem;
+    margin: 0 auto;
+    font-family: var(--font-body);
+    color: var(--ink);
+}
+.bits-about h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+.bits-about .tagline { color: var(--accent); font-size: 1.05rem; margin-bottom: 1.5rem; }
+.bits-about dl { display: grid; grid-template-columns: 10rem 1fr; gap: 0.4rem 1rem; }
+.bits-about dt { color: var(--ink-soft); }
+.bits-about dd { margin: 0; color: var(--ink); }
+.bits-about dd a { color: var(--accent); text-decoration: none; }
+.bits-about .footer-note { margin-top: 1.5rem; color: var(--ink-soft); font-size: 0.85rem; }
