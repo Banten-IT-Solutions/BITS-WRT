@@ -53,7 +53,7 @@ jobs:
       - name: 🩹 Patch Overlay
         run: |
           mkdir -p amlogic-s9xxx-openwrt/config/imagebuilder/files
-          cp -r files/files/. amlogic-s9xxx-openwrt/config/imagebuilder/files/
+          cp -r patch/files/. amlogic-s9xxx-openwrt/config/imagebuilder/files/
           cat > amlogic-s9xxx-openwrt/config/imagebuilder/config <<'EOF'
           CONFIG_PACKAGE_tailscale=y
           CONFIG_PACKAGE_luci-app-tailscale-community=y
