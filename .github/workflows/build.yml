@@ -91,9 +91,10 @@ jobs:
 
       - name: 🧊 Recompress (xz)
         run: |
-          gunzip -k -f "$FILE_PATH"
           IMG="${FILE_PATH%.gz}"
-          xz -T0 -k -f "$IMG"
+          sudo gunzip -k -f "$FILE_PATH"
+          sudo xz -T0 -k -f "$IMG"
+          sudo chmod 644 "${IMG}.xz"
           echo "FILE_PATH=${IMG}.xz" >> $GITHUB_ENV
 
       - name: 🕒 Stamp Date
