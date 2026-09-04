@@ -2,7 +2,7 @@ name: Build OpenWrt
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'  # daily — auto-track latest OpenWrt, skip if same version
+    - cron: '0 0 * * 0'  # weekly (Sunday) — auto-track latest OpenWrt, skip if same version
 
 jobs:
   resolve:
