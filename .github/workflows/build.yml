@@ -1,28 +1,50 @@
-# Copyright (C) 2026 Banten-IT-Solutions https://github.com/Banten-IT-Solutions
-# https://github.com/ophub/amlogic-s9xxx-openwrt
-
 name: Build OpenWrt
 on:
   workflow_dispatch:
-    inputs:
-      board_version:
-        description: 'Select device to compile'
-        required: true
-        default: 'HG680-P'
-        type: choice
-        options:
-          - HG680-P
-          - B860H
+  schedule:
+    - cron: '0 0 * * *'  # daily — auto-track latest OpenWrt, skip if same version
 
 jobs:
-  build:
-    name: 🚀 Build ${{ github.event.inputs.board_version }}
+  resolve:
+    name: 🧭 Resolve
     runs-on: ubuntu-22.04
+    outputs:
+      ver: ${{ steps.version.outputs.ver }}
+      should_build: ${{ steps.guard.outputs.should_build }}
+    steps:
+      - name: 🔎 Latest OpenWrt
+        id: version
+        run: |
+          VER=$(curl -s https://downloads.openwrt.org/releases/ | grep -oE 'href="[0-9]+\.[0-9]+\.[0-9]+/"' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n1)
+          echo "ver=$VER" >> "$GITHUB_OUTPUT"
+          echo "Resolved OpenWrt version: $VER"
+
+      - name: 🚪 Guard (skip if already released)
+        id: guard
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]] && gh release view "v${{ steps.version.outputs.ver }}" >/dev/null 2>&1; then
+            echo "should_build=false" >> "$GITHUB_OUTPUT"
+            echo "Release v${{ steps.version.outputs.ver }} already exists — skipping (cron)."
+          else
+            echo "should_build=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    name: 🚀 Build ${{ matrix.board }}
+    needs: resolve
+    if: needs.resolve.outputs.should_build == 'true'
+    runs-on: ubuntu-22.04
+    env:
+      VER: ${{ needs.resolve.outputs.ver }}
+    strategy:
+      fail-fast: false
+      matrix:
+        board: [B860H, HG680-P]
     steps:
       - name: 📦 Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: 🧬 Clone Builder
         run: |
@@ -49,12 +71,6 @@ jobs:
           # coreutils 8.32 (jammy) lacks --update=none (9.x only); use -n equivalent
           sed -i 's/--update=none/-n/g' amlogic-s9xxx-openwrt/remake
 
-      - name: 🏷️ Resolve Version
-        run: |
-          VER=$(curl -s https://downloads.openwrt.org/releases/ | grep -oE 'href="[0-9]+\.[0-9]+\.[0-9]+/"' | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n1)
-          echo "VER=$VER" >> $GITHUB_ENV
-          echo "Resolved OpenWrt version: $VER"
-
       - name: 🍞 Bake Rootfs
         run: |
           sudo apt-get update -y >/dev/null
@@ -71,16 +87,16 @@ jobs:
 
       - name: 🎯 Resolve Board
         run: |
-          case "${{ github.event.inputs.board_version }}" in
+          case "${{ matrix.board }}" in
             HG680-P) BOARD=s905x ;;
             B860H)   BOARD=s905x-b860h ;;
           esac
-          echo "BOARD=$BOARD" >> $GITHUB_ENV
+          echo "BOARD=$BOARD" >> "$GITHUB_ENV"
 
       - name: ⚙️ Compile
         run: |
           cd amlogic-s9xxx-openwrt
-          sudo ./remake -b ${{ env.BOARD }} -s 1024
+          sudo ./remake -b "$BOARD" -s 1024
 
       - name: 🔍 Locate Image
         run: |
@@ -89,7 +105,7 @@ jobs:
             echo "Error: Tidak ada file firmware ditemukan!"
             exit 1
           fi
-          echo "FILE_PATH=$FILE_PATH" >> $GITHUB_ENV
+          echo "FILE_PATH=$FILE_PATH" >> "$GITHUB_ENV"
 
       - name: 🧊 Recompress (xz)
         run: |
@@ -97,22 +113,48 @@ jobs:
           sudo gunzip -k -f "$FILE_PATH"
           sudo xz -T0 -k -f "$IMG"
           sudo chmod 644 "${IMG}.xz"
-          echo "FILE_PATH=${IMG}.xz" >> $GITHUB_ENV
+          echo "FILE_PATH=${IMG}.xz" >> "$GITHUB_ENV"
 
       - name: 🏷️ Rename
         run: |
-          BOARD=$(echo "${{ github.event.inputs.board_version }}" | tr '[:upper:]' '[:lower:]' | tr -d '-')
+          BOARD=$(echo "${{ matrix.board }}" | tr '[:upper:]' '[:lower:]' | tr -d '-')
           KERNEL=$(basename "$FILE_PATH" | grep -oE 'k[0-9]+\.[0-9]+\.[0-9]+')
           FINAL="bits-wrt-${{ env.VER }}-${BOARD}-${KERNEL}.img.xz"
           DIR=$(dirname "$FILE_PATH")
           sudo mv "$FILE_PATH" "${DIR}/${FINAL}"
-          echo "FILE_PATH=${DIR}/${FINAL}" >> $GITHUB_ENV
+          echo "FINAL=${DIR}/${FINAL}" >> "$GITHUB_ENV"
+
+      - name: 📤 Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.board }}
+          path: ${{ env.FINAL }}
+          if-no-files-found: error
+
+  publish:
+    name: 🚀 Publish
+    needs: [resolve, build]
+    if: needs.resolve.outputs.should_build == 'true'
+    runs-on: ubuntu-22.04
+    env:
+      VER: ${{ needs.resolve.outputs.ver }}
+    steps:
+      - name: 📦 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📥 Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*"
+          path: ./dist
+          merge-multiple: true
 
       - name: 🕒 Stamp Date
-        id: set_date
         run: |
           export TZ='Asia/Jakarta'
-          echo "date_time=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+          echo "date_time=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
 
       - name: 📝 Changelog
         run: |
@@ -127,15 +169,23 @@ jobs:
             echo "* Release date: ${{ env.date_time }}"
           } > /tmp/RELEASE_BODY.md
 
+      - name: 🧹 Clean stale assets
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+        run: |
+          for a in $(gh release view "v${{ env.VER }}" --json assets --jq '.assets[].name' 2>/dev/null); do
+            gh release delete-asset "v${{ env.VER }}" "$a" -y >/dev/null 2>&1 || true
+          done
+
       - name: 🚀 Publish
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
         with:
-          name: BITS-WRT ${{ env.VER }} (${{ github.event.inputs.board_version }})
-          tag_name: v${{ env.VER }}_${{ github.event.inputs.board_version }}
+          name: BITS-WRT ${{ env.VER }}
+          tag_name: v${{ env.VER }}
           draft: false
           prerelease: false
           files: |
-                ${{ env.FILE_PATH }}
+            ./dist/*.img.xz
           body_path: /tmp/RELEASE_BODY.md
