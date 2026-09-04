@@ -272,8 +272,9 @@ custom_settings() {
                    -e "s|^DISTRIB_DESCRIPTION=.*|DISTRIB_DESCRIPTION='BITS-WRT ${op_branch}'|" "${release_file}"
             grep -q '^DISTRIB_HOME_URL='   "${release_file}" || echo "DISTRIB_HOME_URL='https://bits.co.id'" >>"${release_file}"
             grep -q '^DISTRIB_SUPPORT_URL=' "${release_file}" || echo "DISTRIB_SUPPORT_URL='https://github.com/Banten-IT-Solutions/BITS-WRT/issues'" >>"${release_file}"
-            grep -q '^DISTRIB_SOURCEREPO='  "${release_file}" || echo "DISTRIB_SOURCEREPO='github.com/Banten-IT-Solutions/BITS-WRT'" >>"${release_file}"
-            grep -q '^DISTRIB_SOURCECODE='  "${release_file}" || echo "DISTRIB_SOURCECODE='https://github.com/openwrt/openwrt'" >>"${release_file}"
+            grep -q '^DISTRIB_SOURCEREPO='  "${release_file}" || echo "DISTRIB_SOURCEREPO='github.com/openwrt/openwrt'" >>"${release_file}"
+            grep -q '^DISTRIB_SOURCECODE='  "${release_file}" || echo "DISTRIB_SOURCECODE='openwrt'" >>"${release_file}"
+            grep -q '^DISTRIB_SOURCEBRANCH=' "${release_file}" || echo "DISTRIB_SOURCEBRANCH='openwrt-${op_branch}'" >>"${release_file}"
         else
             error_msg "${release_file} not found."
         fi
