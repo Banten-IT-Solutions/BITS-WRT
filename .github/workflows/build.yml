@@ -97,6 +97,15 @@ jobs:
           sudo chmod 644 "${IMG}.xz"
           echo "FILE_PATH=${IMG}.xz" >> $GITHUB_ENV
 
+      - name: 🏷️ Rename
+        run: |
+          BOARD=$(echo "${{ github.event.inputs.board_version }}" | tr '[:upper:]' '[:lower:]' | tr -d '-')
+          KERNEL=$(basename "$FILE_PATH" | grep -oE 'k[0-9]+\.[0-9]+\.[0-9]+')
+          FINAL="bits-wrt-${{ env.VER }}-${BOARD}-${KERNEL}.img.xz"
+          DIR=$(dirname "$FILE_PATH")
+          sudo mv "$FILE_PATH" "${DIR}/${FINAL}"
+          echo "FILE_PATH=${DIR}/${FINAL}" >> $GITHUB_ENV
+
       - name: 🕒 Stamp Date
         id: set_date
         run: |
