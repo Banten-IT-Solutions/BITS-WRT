@@ -89,6 +89,13 @@ jobs:
           fi
           echo "FILE_PATH=$FILE_PATH" >> $GITHUB_ENV
 
+      - name: 🧊 Recompress (xz)
+        run: |
+          gunzip -k -f "$FILE_PATH"
+          IMG="${FILE_PATH%.gz}"
+          xz -T0 -k -f "$IMG"
+          echo "FILE_PATH=${IMG}.xz" >> $GITHUB_ENV
+
       - name: 🕒 Stamp Date
         id: set_date
         run: |
