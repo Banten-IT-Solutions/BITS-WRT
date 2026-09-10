@@ -1,0 +1,46 @@
+name: "✨ Feature Request"
+description: "Usulkan fitur baru atau peningkatan untuk proyek ini"
+title: "✨ [Feature]: "
+labels: ["enhancement"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Terima kasih atas ide fiturnya! 💡
+        Mohon jelaskan dengan detail agar kami dapat mempertimbangkannya dengan baik.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "💡 Deskripsi Fitur"
+      description: "Jelaskan fitur yang Anda inginkan atau masalah yang ingin Anda selesaikan"
+      placeholder: |
+        Jelaskan fitur, apa fungsinya, dan mengapa bermanfaat...
+    validations:
+      required: true
+
+  - type: textarea
+    id: usecase
+    attributes:
+      label: "🎯 Skenario Penggunaan"
+      description: "Jelaskan bagaimana fitur ini akan digunakan dalam keseharian"
+      placeholder: "Contoh: Saya ingin fitur X agar bisa melakukan Y..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: supplements
+    attributes:
+      label: "📎 Informasi Tambahan"
+      description: "Tambahkan referensi, contoh, atau tangkapan layar terkait fitur ini"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: "✅ Konfirmasi"
+      options:
+        - label: "Saya telah mencari feature request serupa sebelumnya"
+          required: true

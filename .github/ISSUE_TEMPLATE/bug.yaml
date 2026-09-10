@@ -1,0 +1,77 @@
+name: "🐛 Bug Report"
+description: "Laporkan bug yang Anda temui untuk membantu kami meningkatkan firmware"
+title: "🐛 [Bug]: "
+labels: ["bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Terima kasih telah melaporkan bug! 🙏
+        Mohon isi formulir di bawah ini selengkap mungkin agar kami dapat memperbaikinya dengan cepat.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "📝 Deskripsi Bug"
+      description: "Jelaskan masalah yang Anda alami secara singkat dan jelas"
+      placeholder: |
+        Ceritakan apa yang terjadi, kapan terjadi, dan bagaimana dampaknya...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "⚠️ Tingkat Keparahan"
+      description: "Seberapa besar dampak bug ini?"
+      options:
+        - "🔴 Kritis — sistem tidak dapat digunakan"
+        - "🟠 Tinggi — fitur utama rusak"
+        - "🟡 Sedang — mengganggu namun masih bisa dipakai"
+        - "🟢 Rendah — masalah kecil / kosmetik"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "🔄 Langkah Reproduksi"
+      description: "Jelaskan langkah-langkah agar bug dapat muncul kembali"
+      placeholder: |
+        1. Buka menu ...
+        2. Klik ...
+        3. Terjadi error ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: "🖥️ Informasi Perangkat"
+      description: "Isi informasi build dan perangkat yang relevan"
+      placeholder: |
+        - Versi Build OpenWrt :
+        - Firmware :
+        - Perangkat :
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: "📷 Tangkapan Layar / Log"
+      description: "Tempel tangkapan layar atau log error yang relevan, jika ada"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: "✅ Konfirmasi"
+      options:
+        - label: "Saya telah mencari issue serupa sebelum melaporkan"
+          required: true
+        - label: "Saya menggunakan versi firmware terbaru"
+          required: false

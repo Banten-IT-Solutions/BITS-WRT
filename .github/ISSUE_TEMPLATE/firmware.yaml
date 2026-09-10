@@ -1,0 +1,58 @@
+name: "📡 Firmware Target Request"
+description: "Permintaan dukungan firmware OpenWrt untuk perangkat baru"
+title: "📡 [Firmware]: "
+labels: ["enhancement"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Permintaan dukungan perangkat baru! 🎯
+        Mohon lengkapi spesifikasi perangkat agar kami dapat mengevaluasinya.
+
+  - type: input
+    id: model
+    attributes:
+      label: "📱 Model Perangkat"
+      description: "Nama model perangkat"
+      placeholder: "Contoh: Orange Pi Zero 2"
+    validations:
+      required: true
+
+  - type: input
+    id: soc
+    attributes:
+      label: "🔬 SoC / Chipset"
+      description: "Jenis System-on-Chip perangkat"
+      placeholder: "Contoh: Allwinner H616"
+    validations:
+      required: true
+
+  - type: input
+    id: architecture
+    attributes:
+      label: "🧠 Arsitektur CPU"
+      description: "Arsitektur prosesor perangkat"
+      placeholder: "Contoh: Cortex-A53 (ARM64)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: "🖥️ Informasi Tambahan"
+      description: "Isi spesifikasi lain yang relevan"
+      placeholder: |
+        - RAM :
+        - Penyimpanan :
+        - Port / Fitur lain :
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: "✅ Konfirmasi"
+      options:
+        - label: "Perangkat ini belum didukung oleh proyek"
+          required: true

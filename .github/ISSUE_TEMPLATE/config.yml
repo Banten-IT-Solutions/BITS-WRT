@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "🌐 Banten IT Solutions"
+    url: https://bits.co.id
+    about: "Website resmi developer"
+  - name: "💬 Telegram Channel"
+    url: https://t.me/bantenitsolutions
+    about: "Pantau rilis dan informasi terbaru BITS-WRT"
+  - name: "👥 Telegram Group"
+    url: https://t.me/bantenitsolution
+    about: "Diskusi dan bantuan komunitas"
+  - name: "👤 Telegram Personal"
+    url: https://t.me/bitscoid
+    about: "Hubungi author secara langsung"

@@ -1,0 +1,35 @@
+name: 🧹 Cleanup Workflow
+
+on:
+  workflow_dispatch:
+  #schedule:
+  #  - cron: '0 0 * * *'
+
+jobs:
+  stale:
+    name: ⏰ Stale & Cleanup
+    runs-on: ubuntu-latest
+    steps:
+      - name: ♻️ Mark Stale
+        uses: actions/stale@v11
+        with:
+          stale-issue-message: "Stale Issue"
+          stale-pr-message: "Stale PR"
+          stale-issue-label: "no-issue-activity"
+          exempt-issue-labels: "awaiting-approval,awaiting,work-in-progress"
+          stale-pr-label: "no-pr-activity"
+          exempt-pr-labels: "awaiting-approval,awaiting,work-in-progress"
+          # only-labels: 'bug,enhancement'
+          days-before-issue-stale: 10
+          days-before-pr-stale: 10
+          days-before-issue-close: 5
+          days-before-pr-close: -1
+          operations-per-run: 500
+
+      - name: 🗑️ Delete Runs
+        uses: Mattraks/delete-workflow-runs@v2.1.0
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 0

@@ -1,0 +1,45 @@
+config interface 'loopback'
+	option device 'lo'
+	option proto 'static'
+	option ipaddr '127.0.0.1'
+	option netmask '255.0.0.0'
+
+config globals 'globals'
+	option packet_steering '1'
+
+config device
+	option name 'br-lan'
+	option type 'bridge'
+	list ports 'eth0'
+	option ipv6 '0'
+
+config interface 'lan'
+	option device 'br-lan'
+	option proto 'static'
+	option ipaddr '20.20.20.20'
+	option netmask '255.255.255.0'
+	option delegate '0'
+
+config interface 'wan'
+	option proto 'dhcp'
+	option device 'eth1'
+	option peerdns '0'
+	list dns '1.1.1.1'
+	list dns '8.8.8.8'
+	option delegate '0'
+
+config device
+	option name 'eth0'
+	option ipv6 '0'
+
+config interface 'hp'
+	option proto 'dhcp'
+	option device 'usb0'
+	option peerdns '0'
+	list dns '1.1.1.1'
+	list dns '8.8.8.8'
+	option delegate '0'
+
+config device
+	option name 'usb0'
+	option ipv6 '0'

@@ -1,0 +1,5 @@
+
+config ttyd
+	option command '/bin/bash --login'
+	option debug '7'
+
