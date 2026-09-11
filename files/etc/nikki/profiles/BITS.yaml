@@ -1,17 +1,55 @@
-# BITS simple profile (fragment — port/DNS dari UCI mixin).
-# Isi akun di /etc/nikki/run/proxy_provider/BITS.yaml, pilih di grup PROXY.
-# Tanpa referensi GEOIP/GEOSITE -> tetap valid meski database geo belum terdownload.
+# BITS mirror momo (fragment — port/DNS dari UCI mixin).
+# Grup + rules selaras: Iklan, Streaming, Sosmed, AI, Indo, ISP.
+# Data: GEOSITE standar + RP-Indo remote. Isi akun di /etc/nikki/run/proxy_provider/BITS.yaml.
 proxy-groups:
-- name: PROXY
+- name: ISP
   type: select
   disable-udp: false
   proxies:
+  - Best
+  - Traffic-Indo
   - DIRECT
-  - REJECT
+  url: http://www.gstatic.com/generate_204
+  interval: 60
+- name: Best
+  type: url-test
+  disable-udp: false
   use:
   - BITS
   url: http://www.gstatic.com/generate_204
-  interval: 60
+  interval: 180
+  tolerance: 100
+- name: Traffic-Ads
+  type: select
+  disable-udp: false
+  proxies:
+  - REJECT
+  - Best
+  - DIRECT
+- name: Traffic-Streaming
+  type: select
+  disable-udp: false
+  proxies:
+  - Best
+  - DIRECT
+- name: Traffic-Sosmed
+  type: select
+  disable-udp: false
+  proxies:
+  - Best
+  - DIRECT
+- name: Traffic-AI
+  type: select
+  disable-udp: false
+  proxies:
+  - Best
+  - DIRECT
+- name: Traffic-Indo
+  type: select
+  disable-udp: false
+  proxies:
+  - Best
+  - DIRECT
 proxy-providers:
   BITS:
     type: file
@@ -20,9 +58,44 @@ proxy-providers:
       enable: true
       url: http://www.gstatic.com/generate_204
       interval: 180
+rule-providers:
+  RP-Indo:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/rtaserver/Clash-Rule-IP-Indo/main/rule-indo.yaml"
+    path: "./rule_provider/rp-indo.yaml"
+    interval: 86400
+    proxy: DIRECT
 rules:
 - DST-PORT,7890,REJECT
 - DST-PORT,7891,REJECT
 - DST-PORT,7892,REJECT
-- IP-CIDR,198.18.0.1/16,REJECT,no-resolve
-- MATCH,PROXY
+- IP-CIDR,198.18.0.0/15,REJECT,no-resolve
+- RULE-SET,RP-Indo,Traffic-Indo
+- DOMAIN-KEYWORD,pagead,Traffic-Ads
+- DOMAIN-KEYWORD,adsystem,Traffic-Ads
+- DOMAIN-KEYWORD,adservice,Traffic-Ads
+- GEOSITE,netflix,Traffic-Streaming
+- GEOSITE,disney,Traffic-Streaming
+- GEOSITE,primevideo,Traffic-Streaming
+- GEOSITE,spotify,Traffic-Streaming
+- GEOSITE,tiktok,Traffic-Streaming
+- DOMAIN-SUFFIX,hbo.com,Traffic-Streaming
+- DOMAIN-SUFFIX,hbomax.com,Traffic-Streaming
+- GEOSITE,facebook,Traffic-Sosmed
+- GEOSITE,twitter,Traffic-Sosmed
+- GEOSITE,telegram,Traffic-Sosmed
+- DOMAIN-SUFFIX,instagram.com,Traffic-Sosmed
+- DOMAIN-SUFFIX,cdninstagram.com,Traffic-Sosmed
+- DOMAIN-KEYWORD,chatgpt,Traffic-AI
+- DOMAIN-KEYWORD,openai,Traffic-AI
+- DOMAIN-KEYWORD,claude,Traffic-AI
+- DOMAIN-KEYWORD,gemini,Traffic-AI
+- DOMAIN-KEYWORD,copilot,Traffic-AI
+- DOMAIN-KEYWORD,perplexity,Traffic-AI
+- DOMAIN-KEYWORD,deepseek,Traffic-AI
+- GEOSITE,youtube,Traffic-Indo
+- GEOSITE,whatsapp,Traffic-Indo
+- GEOSITE,google,Traffic-Indo
+- GEOSITE,private,DIRECT
+- MATCH,ISP
