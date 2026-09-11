@@ -86,6 +86,12 @@ handle_tunnel_option() {
         "openclash-nikki-momo")
             PACKAGES+=" $OPENCLASH $NIKKI $MOMO"
             ;;
+        "no-tunnel"|"")
+            # No extra tunnel packages
+            ;;
+        *)
+            warn "Unknown tunnel option: $1 (skipping)"
+            ;;
     esac
 }
 

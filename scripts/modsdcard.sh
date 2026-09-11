@@ -165,52 +165,32 @@ process_builds() {
     local builds=("${@:3}")
     local exit_code=0
     
-    local tunnel_types=(
-        "openclash"
-        "nikki"
-        "momo"
-        "openclash-nikki"
-        "openclash-momo"
-        "nikki-momo"
-        "openclash-nikki-momo"
-        "no-tunnel"
-    )
-    
-    # Process builds based on tunnel mode
+    # Daftar tunnel dari workflow env (TUNNEL_LIST); fallback agar script tetap bisa jalan standalone
+    local tunnel_types=()
     if [[ "$tunnel_mode" == "all" ]]; then
-        for tunnel in "${tunnel_types[@]}"; do
-            for build in "${builds[@]}"; do
-                IFS=: read -r device kernel dtb model <<< "$build"
-                local image_file
-                image_file=$(find "$img_dir" -name "*_${device}_${kernel}*.img.gz")
-                
-                if [[ -n "$image_file" ]]; then
-                    if ! build_mod_sdcard "$image_file" "$dtb" "$model"; then
-                        log "ERROR" "Failed to process build for $model ($device $kernel) with tunnel: $tunnel"
-                        exit_code=1
-                    fi
-                else
-                    log "WARNING" "No image file found for $model ($device $kernel)"
-                fi
-            done
-        done
+        read -ra tunnel_types <<< "${TUNNEL_LIST:-openclash nikki momo openclash-nikki openclash-momo nikki-momo openclash-nikki-momo no-tunnel}"
     else
+        tunnel_types=("$tunnel_mode")
+    fi
+
+    # Tiap tunnel diproses tepat sekali (find dibatasi suffix tunnel agar tidak dobel)
+    for tunnel in "${tunnel_types[@]}"; do
         for build in "${builds[@]}"; do
             IFS=: read -r device kernel dtb model <<< "$build"
             local image_file
-            image_file=$(find "$img_dir" -name "*_${device}_${kernel}*.img.gz")
-            
+            image_file=$(find "$img_dir" -name "*_${device}_${kernel}*_${tunnel}.img.gz")
+
             if [[ -n "$image_file" ]]; then
                 if ! build_mod_sdcard "$image_file" "$dtb" "$model"; then
-                    log "ERROR" "Failed to process build for $model ($device $kernel)"
+                    log "ERROR" "Failed to process build for $model ($device $kernel) with tunnel: $tunnel"
                     exit_code=1
                 fi
             else
-                log "WARNING" "No image file found for $model ($device $kernel)"
+                log "WARNING" "No image file found for $model ($device $kernel) with tunnel: $tunnel"
             fi
         done
-    fi
-    
+    done
+
     return $exit_code
 }
 

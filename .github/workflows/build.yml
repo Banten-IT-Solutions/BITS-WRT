@@ -85,6 +85,9 @@ env:
   RELEASE_BRANCH: ${{ inputs.openwrt_version }}
   VARIANT: ${{ inputs.variant }}
   TUNNEL: ${{ inputs.tunnel }}
+  # Single source of truth untuk semua kombinasi tunnel yang bisa di-build.
+  # "all" = meta-selector, di-resolve jadi list ini di step Build Variables.
+  TUNNEL_LIST: "openclash nikki momo openclash-nikki openclash-momo nikki-momo openclash-nikki-momo no-tunnel"
   CLEAN: ${{ inputs.clean }}
   REMOTE: ${{ inputs.remote }}
   CONTAINER: ${{ inputs.container }}
@@ -178,6 +181,18 @@ jobs:
           # Set date variable
           echo "DATE=$(date +'%d%m%Y')" >> $GITHUB_ENV
 
+          # Resolve tunnel selection: "all" -> full list, else single value (validated)
+          if [[ "$TUNNEL" == "all" ]]; then
+            TUNNEL_SELECTED="$TUNNEL_LIST"
+          elif [[ " $TUNNEL_LIST " == *" $TUNNEL "* ]]; then
+            TUNNEL_SELECTED="$TUNNEL"
+          else
+            echo "::error::Unknown tunnel option: $TUNNEL (valid: all, $TUNNEL_LIST)"
+            exit 1
+          fi
+          echo "TUNNEL_SELECTED=$TUNNEL_SELECTED" >> $GITHUB_ENV
+          echo "Selected tunnel(s): $TUNNEL_SELECTED"
+
           echo "Build variables configured successfully"
           echo "status=success" >> $GITHUB_OUTPUT
 
@@ -233,13 +248,11 @@ jobs:
           chmod +x scripts/patch.sh
           ./scripts/patch.sh
 
-          # Configure tunnel apps
+          # Configure tunnel apps (per selected tunnel; script is idempotent)
           chmod +x scripts/tunnel.sh
-          if [[ "${{ env.TUNNEL }}" == "all" ]]; then
-            ./scripts/tunnel.sh openclash-nikki-momo
-          elif [[ "${{ env.TUNNEL }}" =~ ^(openclash|nikki|momo|openclash-nikki|openclash-momo|nikki-momo|openclash-nikki-momo)$ ]]; then
-            ./scripts/tunnel.sh "${{ env.TUNNEL }}"
-          fi
+          for tunnel in $TUNNEL_SELECTED; do
+            ./scripts/tunnel.sh "$tunnel"
+          done
 
           echo "Customizations applied successfully"
           df -hT ${PWD}
@@ -274,13 +287,9 @@ jobs:
             done
           }
 
-          if [[ "${{ env.TUNNEL }}" == "all" ]]; then
-            for tunnel in openclash nikki momo openclash-nikki openclash-momo nikki-momo openclash-nikki-momo no-tunnel; do
-              build_image $tunnel
-            done
-          else
-            build_image ${{ env.TUNNEL }}
-          fi
+          for tunnel in $TUNNEL_SELECTED; do
+            build_image $tunnel
+          done
 
           echo "Images built successfully:"
           ls -la compiled_images/
@@ -321,13 +330,9 @@ jobs:
             sudo rm -rf amlogic-s9xxx-openwrt
           }
 
-          if [[ "${{ env.TUNNEL }}" == "all" ]]; then
-            for tunnel in openclash nikki momo openclash-nikki openclash-momo nikki-momo openclash-nikki-momo no-tunnel; do
-              package_image $tunnel
-            done
-          else
-            package_image ${{ env.TUNNEL }}
-          fi
+          for tunnel in $TUNNEL_SELECTED; do
+            package_image $tunnel
+          done
 
           echo "Images packaged successfully"
           echo "status=success" >> $GITHUB_OUTPUT
