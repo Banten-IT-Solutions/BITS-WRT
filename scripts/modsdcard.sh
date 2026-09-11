@@ -118,26 +118,36 @@ build_mod_sdcard() {
         log "INFO" "Activated extlinux.conf from .bak."
     fi
 
-    # Update configuration files (gist Phase 3C: point DTB to target board)
+    # Update configuration files (DTB per model, ophub-style: uEnv/extlinux/boot.ini)
     log "INFO" "Updating configuration files..."
-    local uenv extlinux bootdtb
+    local uenv extlinux
     [ -f boot/uEnv.txt ] && uenv=$(sudo cat boot/uEnv.txt | grep APPEND | awk -F "root=" '{print $2}')
     [ -f boot/extlinux/extlinux.conf ] && extlinux=$(sudo cat boot/extlinux/extlinux.conf | grep append | awk -F "root=" '{print $2}')
-    [ -f boot/boot.ini ] && bootdtb=$(sudo cat boot/boot.ini | grep dtb | awk -F "/" '{print $4}' | cut -d'"' -f1)
 
     if [ -n "$extlinux" ] && [ -n "$uenv" ]; then
         sudo sed -i "s|$extlinux|$uenv|g" boot/extlinux/extlinux.conf
     fi
-    if [ -n "$bootdtb" ]; then
-        for f in boot/boot.ini boot/extlinux/extlinux.conf boot/uEnv.txt; do
-            [ -f "$f" ] && sudo sed -i "s|$bootdtb|$dtb|g" "$f"
-        done
-    else
-        log "WARNING" "No DTB reference found in boot.ini, skipping DTB patch."
+    for f in boot/uEnv.txt boot/extlinux/extlinux.conf; do
+        [ -f "$f" ] || continue
+        log "INFO" "Patching DTB in $f..."
+        sudo sed -i "s|meson-[A-Za-z0-9_.-]*\.dtb|$dtb|g" "$f"
+        sudo sed -i "s|\(fdtfile=[^ /\"']*/\)[^ /\"']*$|\1$dtb|g" "$f"
+    done
+    # boot.ini (if present): only the devtype line points to model DTB
+    if [ -f boot/boot.ini ]; then
+        if grep -q 'setenv devtype' boot/boot.ini; then
+            sudo sed -i "s|.*setenv devtype.*|if test \"\${devtype}\" = \"\"; then setenv devtype \"/dtb/amlogic/$dtb\"; fi|g" boot/boot.ini
+            log "INFO" "devtype set to $dtb in boot.ini."
+        else
+            log "WARNING" "No devtype line in boot.ini, skipping."
+        fi
     fi
 
     sync
-    sudo umount boot
+    if ! sudo umount boot; then
+        log "ERROR" "Failed to unmount boot partition, aborting to avoid corrupt image"
+        return 1
+    fi
 
     # Write bootloader
     log "INFO" "Writing bootloader..."
@@ -165,7 +175,7 @@ build_mod_sdcard() {
     cd ..
     rm -rf "${suffix}"
     cleanup
-    echo -e "${SUCCESS} Successfully processed ${suffix}"
+    log "SUCCESS" "Successfully processed ${suffix}"
     return 0
 }
 
