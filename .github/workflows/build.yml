@@ -7,91 +7,103 @@ concurrency:
 on:
   workflow_dispatch:
     inputs:
-      openwrt_version:
-        description: "Select Openwrt Version"
+      board:
+        description: "Select Device"
         required: true
-        default: "openwrt:24.10.8"
+        default: "HG680P"
         type: choice
         options:
-          - openwrt:24.10.8
-          - openwrt:25.12.5
+          - HG680P
+          - B860H
+      openwrt_version:
+        description: "Select OpenWrt Version"
+        required: true
+        default: "OpenWrt 24.10.8"
+        type: choice
+        options:
+          - OpenWrt 24.10.8
+          - OpenWrt 25.12.5
       openwrt_kernel:
         description: "Select Kernel Version"
         required: false
-        default: "6.6.y"
+        default: "Kernel 6.6"
         type: choice
         options:
-          - 6.6.y
-          - 6.12.y
+          - Kernel 6.6
+          - Kernel 6.12
       variant:
-        description: "Build Minimal / Standard"
+        description: "Select Build Variant"
         required: true
-        default: "standard"
+        default: "Standard"
         type: choice
         options:
-          - minimal
-          - standard
+          - Minimal
+          - Standard
       tunnel:
         description: "Select VPN Client"
         required: true
-        default: "momo"
+        default: "Momo"
         type: choice
         options:
-          - all
-          - openclash
-          - nikki
-          - momo
-          - openclash-nikki
-          - openclash-momo
-          - nikki-momo
-          - openclash-nikki-momo
-          - no-tunnel
+          - All In One
+          - OpenClash
+          - Nikki
+          - Momo
+          - OpenClash + Nikki
+          - OpenClash + Momo
+          - Nikki + Momo
+          - OpenClash + Nikki + Momo
+          - No Tunnel
       remote:
-        description: "Remote Access"
+        description: "Select Remote Access"
         required: true
-        default: "both"
+        default: "Tailscale + Cloudflare"
         type: choice
         options:
-          - no
-          - tailscale
-          - cloudflare
-          - both
+          - No Remote
+          - Tailscale
+          - Cloudflare
+          - Tailscale + Cloudflare
       container:
-        description: "Container Runtime"
+        description: "Select Container Runtime"
         required: true
-        default: "no"
+        default: "No Runtime"
         type: choice
         options:
-          - no
-          - docker
-          - podman
+          - No Runtime
+          - Docker
+          - Podman
       addon:
-        description: "Monitoring Tools"
+        description: "Select Monitoring Tools"
         required: true
-        default: "no"
+        default: "No Monitoring"
         type: choice
         options:
-          - no
-          - bandix
-          - bot
-          - both
+          - No Monitoring
+          - Bandix
+          - BITS Bot
+          - Bandix + BITS Bot
+      mod_sdcard:
+        description: "Select Mod SD Card"
+        required: true
+        default: "Yes"
+        type: choice
+        options:
+          - "Yes"
+          - "No"
       clean:
-        description: "Clean Build"
-        required: false
-        default: "true"
-        type: boolean
+        description: "Select Clean Build"
+        required: true
+        default: "Yes"
+        type: choice
+        options:
+          - "Yes"
+          - "No"
 
 env:
-  RELEASE_BRANCH: ${{ inputs.openwrt_version }}
-  VARIANT: ${{ inputs.variant }}
-  TUNNEL: ${{ inputs.tunnel }}
-  # Single source of truth untuk semua kombinasi tunnel yang bisa di-build.
-  # "all" = meta-selector, di-resolve jadi list ini di step Build Variables.
+  # Single source of truth for all valid tunnel combinations.
+  # "all" is a meta-selector, resolved to "openclash-nikki-momo" in the Build Variables step.
   TUNNEL_LIST: "openclash nikki momo openclash-nikki openclash-momo nikki-momo openclash-nikki-momo no-tunnel"
-  CLEAN: ${{ inputs.clean }}
-  REMOTE: ${{ inputs.remote }}
-  CONTAINER: ${{ inputs.container }}
-  ADDON: ${{ inputs.addon }}
   TZ: Asia/Jakarta
   WORKING_DIR: imagebuilder
   DEBIAN_FRONTEND: noninteractive
@@ -104,7 +116,7 @@ jobs:
       status: ${{ steps.compatibility.outputs.status }}
 
     steps:
-      - name: 🔍 Check Requirements
+      - name: 🔍 Check Compatibility
         id: compatibility
         run: |
           echo "::group::Runner"
@@ -113,14 +125,16 @@ jobs:
           echo "Disk: $(df -h / | awk 'NR==2{print $4}') free"
           echo "::endgroup::"
           echo "::group::Build Config"
-          echo "openwrt_version : ${{ env.RELEASE_BRANCH }}"
-          echo "kernel          : ${{ inputs.openwrt_kernel }}"
-          echo "variant         : ${{ env.VARIANT }}"
-          echo "tunnel          : ${{ env.TUNNEL }}"
-          echo "remote          : ${{ env.REMOTE }}"
-          echo "container       : ${{ env.CONTAINER }}"
-          echo "addon           : ${{ env.ADDON }}"
-          echo "clean           : ${{ env.CLEAN }}"
+          echo "board           : ${{ inputs.board }}"
+          echo "openwrt_version : ${{ inputs.openwrt_version }}"
+          echo "openwrt_kernel  : ${{ inputs.openwrt_kernel }}"
+          echo "variant         : ${{ inputs.variant }}"
+          echo "tunnel          : ${{ inputs.tunnel }}"
+          echo "remote          : ${{ inputs.remote }}"
+          echo "container       : ${{ inputs.container }}"
+          echo "addon           : ${{ inputs.addon }}"
+          echo "mod_sdcard      : ${{ inputs.mod_sdcard }}"
+          echo "clean           : ${{ inputs.clean }}"
           echo "::endgroup::"
           echo "status=success" >> $GITHUB_OUTPUT
 
@@ -152,7 +166,7 @@ jobs:
           sudo timedatectl set-timezone "${TZ}"
           echo "status=success" >> "${GITHUB_OUTPUT}"
 
-      - name: 📥 Checkout
+      - name: 🧾 Checkout
         uses: actions/checkout@v7
         with:
           path: origin
@@ -161,7 +175,72 @@ jobs:
       - name: 🧩 Build Variables
         id: variables
         run: |
-          echo "openwrt_board=s905x_s905x-b860h" >> $GITHUB_ENV
+          # Map user-friendly labels -> internal values
+          case "${{ inputs.board }}" in
+            HG680P) BOARD="HG680P"; openwrt_board="s905x" ;;
+            B860H)  BOARD="B860H";  openwrt_board="s905x-b860h" ;;
+          esac
+          case "${{ inputs.openwrt_version }}" in
+            "OpenWrt 24.10.8") RELEASE_BRANCH="openwrt:24.10.8" ;;
+            "OpenWrt 25.12.5") RELEASE_BRANCH="openwrt:25.12.5" ;;
+          esac
+          case "${{ inputs.openwrt_kernel }}" in
+            "Kernel 6.6")  KERNEL="6.6.y" ;;
+            "Kernel 6.12") KERNEL="6.12.y" ;;
+          esac
+          case "${{ inputs.variant }}" in
+            "Minimal")  VARIANT="minimal" ;;
+            "Standard") VARIANT="standard" ;;
+          esac
+          case "${{ inputs.tunnel }}" in
+            "All In One")               TUNNEL="all" ;;
+            "OpenClash")                TUNNEL="openclash" ;;
+            "Nikki")                    TUNNEL="nikki" ;;
+            "Momo")                     TUNNEL="momo" ;;
+            "OpenClash + Nikki")        TUNNEL="openclash-nikki" ;;
+            "OpenClash + Momo")         TUNNEL="openclash-momo" ;;
+            "Nikki + Momo")             TUNNEL="nikki-momo" ;;
+            "OpenClash + Nikki + Momo") TUNNEL="openclash-nikki-momo" ;;
+            "No Tunnel")                TUNNEL="no-tunnel" ;;
+          esac
+          case "${{ inputs.remote }}" in
+            "No Remote")               REMOTE="no" ;;
+            "Tailscale")               REMOTE="tailscale" ;;
+            "Cloudflare")              REMOTE="cloudflare" ;;
+            "Tailscale + Cloudflare")  REMOTE="both" ;;
+          esac
+          case "${{ inputs.container }}" in
+            "No Runtime") CONTAINER="no" ;;
+            "Docker")     CONTAINER="docker" ;;
+            "Podman")     CONTAINER="podman" ;;
+          esac
+          case "${{ inputs.addon }}" in
+            "No Monitoring")     ADDON="no" ;;
+            "Bandix")            ADDON="bandix" ;;
+            "BITS Bot")          ADDON="bot" ;;
+            "Bandix + BITS Bot") ADDON="both" ;;
+          esac
+          case "${{ inputs.mod_sdcard }}" in
+            "Yes") MOD_SDCARD="true" ;;
+            "No")  MOD_SDCARD="false" ;;
+          esac
+          case "${{ inputs.clean }}" in
+            "Yes") CLEAN="true" ;;
+            "No")  CLEAN="false" ;;
+          esac
+
+          echo "BOARD=$BOARD" >> $GITHUB_ENV
+          echo "openwrt_board=$openwrt_board" >> $GITHUB_ENV
+          echo "RELEASE_BRANCH=$RELEASE_BRANCH" >> $GITHUB_ENV
+          echo "KERNEL=$KERNEL" >> $GITHUB_ENV
+          echo "VARIANT=$VARIANT" >> $GITHUB_ENV
+          echo "TUNNEL=$TUNNEL" >> $GITHUB_ENV
+          echo "REMOTE=$REMOTE" >> $GITHUB_ENV
+          echo "CONTAINER=$CONTAINER" >> $GITHUB_ENV
+          echo "ADDON=$ADDON" >> $GITHUB_ENV
+          echo "MOD_SDCARD=$MOD_SDCARD" >> $GITHUB_ENV
+          echo "CLEAN=$CLEAN" >> $GITHUB_ENV
+
           echo "PROFILE=generic" >> $GITHUB_ENV
           echo "TARGET_SYSTEM=armsr/armv8" >> $GITHUB_ENV
           echo "TARGET_NAME=armsr-armv8" >> $GITHUB_ENV
@@ -181,9 +260,9 @@ jobs:
           # Set date variable
           echo "DATE=$(date +'%d%m%Y')" >> $GITHUB_ENV
 
-          # Resolve tunnel selection: "all" -> full list, else single value (validated)
+          # Resolve tunnel selection: "all" -> all-in-one image, else single value (validated)
           if [[ "$TUNNEL" == "all" ]]; then
-            TUNNEL_SELECTED="$TUNNEL_LIST"
+            TUNNEL_SELECTED="openclash-nikki-momo"
           elif [[ " $TUNNEL_LIST " == *" $TUNNEL "* ]]; then
             TUNNEL_SELECTED="$TUNNEL"
           else
@@ -226,7 +305,7 @@ jobs:
           echo "Image builder prepared successfully"
           echo "status=success" >> $GITHUB_OUTPUT
 
-      - name: 📦 Packages
+      - name: ⬇️ Download Packages
         id: packages
         if: steps.download.outputs.status == 'success'
         run: |
@@ -269,15 +348,15 @@ jobs:
           build_image() {
             local tunnel=$1
             echo "Building with VPN Client: $tunnel"
-            
+
             # Clean if requested
             if [ "${{ env.CLEAN }}" == "true" ]; then
               make clean
             fi
-            
+
             # Build image
             time ./make-image.sh ${{ env.PROFILE }} $tunnel ${{ env.VARIANT }} ${{ env.REMOTE }} ${{ env.CONTAINER }} ${{ env.ADDON }}
-            
+
             # Move and rename output files
             for file in bin/targets/"${{ env.TARGET_SYSTEM }}"/*rootfs.tar.gz; do
               if [ -f "$file" ]; then
@@ -304,29 +383,49 @@ jobs:
           package_image() {
             local tunnel=$1
             echo "Packaging images for: $tunnel"
-            
+
             git clone --depth 1 https://github.com/ophub/amlogic-s9xxx-openwrt.git
             mkdir -p amlogic-s9xxx-openwrt/openwrt-armvirt
-            
+
             for file in compiled_images/*_${tunnel}.tar.gz; do
               if [ -f "$file" ]; then
                 mv "$file" amlogic-s9xxx-openwrt/openwrt-armvirt/BITS-WRT_openwrt-armsr-armv8-generic-rootfs.tar.gz
                 cd amlogic-s9xxx-openwrt
-                sudo ./remake -b ${{ env.openwrt_board }} -k ${{ inputs.openwrt_kernel }} -s 1024
-                
-                # Cari file output dan pindahkan
+                sudo ./remake -b ${{ env.openwrt_board }} -k ${{ env.KERNEL }} -s 1024
+
+                # Convert to xz and name output images
                 find ./openwrt/out/ -name "*.img.gz" | while read FILE_PATH; do
                   if [ -n "$FILE_PATH" ]; then
-                    NEW_NAME="BITS-WRT_$(basename "$FILE_PATH" .img.gz)_${tunnel}.img.gz"
-                    sudo mv "$FILE_PATH" "$GITHUB_WORKSPACE/${{ env.WORKING_DIR }}/compiled_images/$NEW_NAME"
+                    KVER="$(basename "$FILE_PATH" | sed -nE 's/.*_k([0-9]+\.[0-9]+\.[0-9]+).*/\1/p')"
+
+                    FEATURES="${tunnel}"
+                    case "$REMOTE" in
+                      tailscale)  FEATURES+="-ts" ;;
+                      cloudflare) FEATURES+="-cf" ;;
+                      both)       FEATURES+="-ts-cf" ;;
+                    esac
+                    case "$CONTAINER" in
+                      docker) FEATURES+="-docker" ;;
+                      podman) FEATURES+="-podman" ;;
+                    esac
+                    case "$ADDON" in
+                      bandix) FEATURES+="-bandix" ;;
+                      bot)    FEATURES+="-bot" ;;
+                      both)   FEATURES+="-bandix-bot" ;;
+                    esac
+
+                    SUFFIX=""
+                    [ "$MOD_SDCARD" == "true" ] && SUFFIX="_mod"
+                    NEW_NAME="BITS-WRT_${BRANCH}_${BOARD}_k${KVER}_${FEATURES}_${VARIANT}${SUFFIX}.img.xz"
+                    sudo gunzip -c "$FILE_PATH" | xz -T0 > "$GITHUB_WORKSPACE/${{ env.WORKING_DIR }}/compiled_images/$NEW_NAME"
                   fi
                 done
-                
-                # Kembali ke directory awal
+
+                # Return to working directory
                 cd $GITHUB_WORKSPACE/${{ env.WORKING_DIR }}
               fi
             done
-            
+
             sudo rm -rf amlogic-s9xxx-openwrt
           }
 
@@ -338,15 +437,19 @@ jobs:
           echo "status=success" >> $GITHUB_OUTPUT
           ls -la compiled_images/
 
-      - name: 💾 Mod SDCard
+      - name: 💾 Modify SD Card
         id: modsdcard
         if: steps.package.outputs.status == 'success'
         run: |
           cd ${{ env.WORKING_DIR }}
 
-          chmod +x scripts/modsdcard.sh
-          if [[ "$(find "$GITHUB_WORKSPACE/${{ env.WORKING_DIR }}/compiled_images" -name "*_s905x_*.img.gz")" ]]; then
-            ./scripts/modsdcard.sh
+          if [ "${{ env.MOD_SDCARD }}" == "true" ]; then
+            chmod +x scripts/modsdcard.sh
+            if [[ "$(find "$GITHUB_WORKSPACE/${{ env.WORKING_DIR }}/compiled_images" -name "*.img.xz" -print -quit)" ]]; then
+              ./scripts/modsdcard.sh
+            fi
+          else
+            echo "Mod SD Card skipped"
           fi
           echo "status=success" >> $GITHUB_OUTPUT
 
@@ -354,11 +457,11 @@ jobs:
         if: steps.modsdcard.outputs.status == 'success'
         run: |
           echo "::group::Artifacts"
-          ls -la "${{ env.WORKING_DIR }}/compiled_images/"*.gz 2>/dev/null || ls -la "${{ env.WORKING_DIR }}/compiled_images/"
+          ls -la "${{ env.WORKING_DIR }}/compiled_images/"*.xz 2>/dev/null || ls -la "${{ env.WORKING_DIR }}/compiled_images/"
           echo "::endgroup::"
           echo "board : ${{ env.openwrt_board }}"
           echo "branch: ${{ env.BRANCH }} (${{ env.VEROP }})"
-          echo "kernel: ${{ inputs.openwrt_kernel }}"
+          echo "kernel: ${{ env.KERNEL }}"
 
       - name: 🚀 Release
         if: steps.modsdcard.outputs.status == 'success'
@@ -368,6 +471,6 @@ jobs:
         with:
           tag_name: "bitswrt-amlogic-${{ env.BRANCH }}"
           name: BITS-WRT-Amlogic-${{ env.BRANCH }}-${{ env.TUNNEL }}-${{ env.DATE }}
-          files: ${{ env.WORKING_DIR }}/compiled_images/*.gz
+          files: ${{ env.WORKING_DIR }}/compiled_images/*.xz
           prerelease: true
           generate_release_notes: true

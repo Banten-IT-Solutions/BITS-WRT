@@ -61,10 +61,10 @@ build_mod_sdcard() {
     }
 
     local file_name
-    file_name=$(basename "${file_to_process%.gz}")
+    file_name=$(basename "${file_to_process%.xz}")
 
     # Decompress the OpenWRT image
-    if ! sudo gunzip "${file_name}.gz"; then
+    if ! sudo xz -d -T0 "${file_name}.xz"; then
         log "ERROR" "Failed to decompress image"
         return 1
     fi
@@ -159,15 +159,15 @@ build_mod_sdcard() {
 
     # Detach loop device and compress
     sudo losetup -d "${device}"
-    if ! sudo gzip "${file_name}"; then
+    if ! sudo xz -T0 "${file_name}"; then
         log "ERROR" "Failed to compress image"
         return 1
     fi
 
-    if [ -f "../${file_name}.gz" ]; then
-        rm -rf "../${file_name}.gz"
+    if [ -f "../${file_name}.xz" ]; then
+        rm -rf "../${file_name}.xz"
     fi
-    mv "${file_name}.gz" "../${file_name}.gz" || {
+    mv "${file_name}.xz" "../${file_name}.xz" || {
         log "ERROR" "Failed to rename image file"
         return 1
     }
@@ -179,64 +179,34 @@ build_mod_sdcard() {
     return 0
 }
 
-process_builds() {
-    local img_dir="$1"
-    local tunnel_mode="$2"
-    local builds=("${@:3}")
-    local exit_code=0
-    
-    # Daftar tunnel dari workflow env (TUNNEL_LIST); fallback agar script tetap bisa jalan standalone
-    local tunnel_types=()
-    if [[ "$tunnel_mode" == "all" ]]; then
-        read -ra tunnel_types <<< "${TUNNEL_LIST:-openclash nikki momo openclash-nikki openclash-momo nikki-momo openclash-nikki-momo no-tunnel}"
-    else
-        tunnel_types=("$tunnel_mode")
-    fi
-
-    # Tiap tunnel diproses tepat sekali (find dibatasi suffix tunnel agar tidak dobel)
-    for tunnel in "${tunnel_types[@]}"; do
-        for build in "${builds[@]}"; do
-            IFS=: read -r device kernel dtb model <<< "$build"
-            local image_file
-            image_file=$(find "$img_dir" -name "*_${device}_${kernel}*_${tunnel}.img.gz")
-
-            if [[ -n "$image_file" ]]; then
-                if ! build_mod_sdcard "$image_file" "$dtb" "$model"; then
-                    log "ERROR" "Failed to process build for $model ($device $kernel) with tunnel: $tunnel"
-                    exit_code=1
-                fi
-            else
-                log "WARNING" "No image file found for $model ($device $kernel) with tunnel: $tunnel"
-            fi
-        done
-    done
-
-    return $exit_code
-}
-
 main() {
     local exit_code=0
     local img_dir="$GITHUB_WORKSPACE/$WORKING_DIR/compiled_images"
-    
-    # Configuration array with format device:kernel:dtb:model
-    local builds=(
-        "s905x:k6.6:meson-gxl-s905x-p212.dtb:HG680P"
-        "s905x:k6.12:meson-gxl-s905x-p212.dtb:HG680P"
-        "s905x-b860h:k6.6:meson-gxl-s905x-b860h.dtb:B860H_v1-v2"
-        "s905x-b860h:k6.12:meson-gxl-s905x-b860h.dtb:B860H_v1-v2"
-    )
-    
+
+    # Board params (dtb + model) derived from the selected board
+    local dtb model
+    case "${openwrt_board:-}" in
+        s905x)       dtb="meson-gxl-s905x-p212.dtb";  model="HG680P" ;;
+        s905x-b860h) dtb="meson-gxl-s905x-b860h.dtb"; model="B860H_v1-v2" ;;
+        *) log "ERROR" "Unsupported board: ${openwrt_board:-<unset>}"; return 1 ;;
+    esac
+
     # Validate environment
     if [[ ! -d "$img_dir" ]]; then
         log "ERROR" "Image directory not found: $img_dir"
         return 1
     fi
-    
-    # Process builds
-    if ! process_builds "$img_dir" "${TUNNEL}" "${builds[@]}"; then
-        exit_code=1
-    fi
-    
+
+    # Process every image (single board + kernel per run)
+    local f
+    for f in "$img_dir"/*.img.xz; do
+        [ -f "$f" ] || continue
+        if ! build_mod_sdcard "$f" "$dtb" "$model"; then
+            log "ERROR" "Failed to process: $f"
+            exit_code=1
+        fi
+    done
+
     return $exit_code
 }
 
