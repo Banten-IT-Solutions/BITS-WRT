@@ -59,6 +59,15 @@ else
   rm -rf /etc/nikki
 fi
 
+# configurating Momo
+if opkg list-installed | grep luci-app-momo > /dev/null; then
+  echo "setup complete!"
+else
+  echo "No Momo Detected."
+  rm -rf /etc/config/momo
+  rm -rf /etc/momo
+fi
+
 echo "All first boot setup complete!"
 rm -f /etc/uci-defaults/$(basename $0)
 exit 0

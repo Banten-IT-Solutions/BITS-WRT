@@ -40,7 +40,7 @@ cpusage ttyd dmesg kmod-tun luci-lib-ipkg \
 zram-swap adb parted losetup resize2fs luci luci-ssl block-mount htop bash curl wget-ssl \
 tar unzip unrar gzip jq luci-app-ttyd nano httping screen openssh-sftp-server \
 liblucihttp liblucihttp-lua libubus-lua lua luci-app-firewall luci-app-opkg \
-ca-bundle ca-certificates luci-compat coreutils-sleep fontconfig coreutils-whoami file lolcat \
+ca-bundle ca-certificates luci-compat coreutils-sleep coreutils-whoami file lolcat \
 luci-base luci-lib-base luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-mod-admin-full \
 luci-mod-network luci-mod-status luci-mod-system luci-proto-ipv6 luci-proto-ppp \
 luci-theme-bootstrap px5g-wolfssl rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci \
@@ -173,7 +173,7 @@ PACKAGES+=" -dnsmasq -procd-ujail dnsmasq-full \
 luci luci-ssl luci-compat luci-lua-runtime \
 rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci rpcd-mod-rrdns \
 uhttpd uhttpd-mod-ubus px5g-wolfssl cgi-io \
-bash jq nano ttyd luci-app-ttyd \
+bash jq nano ttyd luci-app-ttyd luci-app-ramfree \
 luci-theme-bits luci-theme-bootstrap \
 sing-box-tiny momo luci-app-momo \
 kmod-tun kmod-inet-diag \

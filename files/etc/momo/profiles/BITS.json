@@ -1,0 +1,676 @@
+{
+  "log": {
+    "level": "panic",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "https",
+        "tag": "cloudflare",
+        "detour": "🌐 ISP",
+        "server": "1.1.1.1"
+      },
+      {
+        "type": "https",
+        "tag": "google",
+        "detour": "🌐 ISP",
+        "server": "8.8.8.8"
+      },
+      {
+        "type": "https",
+        "tag": "direct-dns",
+        "server": "1.1.1.1"
+      },
+      {
+        "type": "fakeip",
+        "tag": "fake-ip",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
+      }
+    ],
+    "rules": [
+      {
+        "query_type": [
+          "PTR"
+        ],
+        "action": "predefined",
+        "rcode": "NXDOMAIN"
+      },
+      {
+        "inbound": "dns-in",
+        "server": "fake-ip"
+      },
+      {
+        "clash_mode": "direct",
+        "server": "direct-dns"
+      },
+      {
+        "server": "fake-ip",
+        "rewrite_ttl": 1
+      }
+    ],
+    "final": "cloudflare",
+    "reverse_mapping": true,
+    "strategy": "ipv4_only",
+    "independent_cache": true,
+    "cache_capacity": 4096
+  },
+  "inbounds": [
+    {
+      "type": "redirect",
+      "tag": "redirect-in",
+      "listen": "0.0.0.0",
+      "listen_port": 7891,
+      "sniff": true,
+      "sniff_override_destination": true
+    },
+    {
+      "type": "tproxy",
+      "tag": "tproxy-in",
+      "listen": "0.0.0.0",
+      "listen_port": 7892,
+      "sniff": true,
+      "sniff_override_destination": true
+    },
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "interface_name": "momo-tun",
+      "address": [
+        "172.18.0.1/30"
+      ],
+      "stack": "mixed",
+      "auto_route": false,
+      "sniff": true,
+      "sniff_override_destination": true
+    },
+    {
+      "type": "direct",
+      "tag": "dns-in",
+      "listen": "0.0.0.0",
+      "listen_port": 1053,
+      "sniff": true,
+      "sniff_override_destination": true
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "0.0.0.0",
+      "listen_port": 7890,
+      "sniff": true,
+      "sniff_override_destination": true
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "vless",
+      "tag": "🇮🇩 Telekomunikasi Indonesia",
+      "server": "SERVER.COM",
+      "server_port": 443,
+      "uuid": "11111111-1111-1111-1111-111111111111",
+      "tls": {
+        "enabled": true,
+        "server_name": "SERVER.COM",
+        "insecure": false
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/PATH",
+        "headers": {
+          "Host": "SERVER.COM"
+        }
+      },
+      "domain_resolver": "direct-dns",
+      "multiplex": {
+        "enabled": false,
+        "protocol": "smux"
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇸🇬 Oracle Corporation",
+      "server": "SERVER.COM",
+      "server_port": 443,
+      "uuid": "22222222-2222-2222-2222-222222222222",
+      "tls": {
+        "enabled": true,
+        "server_name": "SERVER.COM",
+        "insecure": false
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/PATH",
+        "headers": {
+          "Host": "SERVER.COM"
+        }
+      },
+      "domain_resolver": "direct-dns",
+      "multiplex": {
+        "enabled": false,
+        "protocol": "smux"
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇸🇬 M1 Ltd",
+      "server": "SERVER.COM",
+      "server_port": 443,
+      "uuid": "33333333-3333-3333-3333-333333333333",
+      "tls": {
+        "enabled": true,
+        "server_name": "SERVER.COM",
+        "insecure": false
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/PATH",
+        "headers": {
+          "Host": "SERVER.COM"
+        }
+      },
+      "domain_resolver": "direct-dns",
+      "multiplex": {
+        "enabled": false,
+        "protocol": "smux"
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "REJECT"
+    },
+    {
+      "type": "urltest",
+      "tag": "🏆 Best Latency",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "🇮🇩 Telekomunikasi Indonesia",
+        "🇸🇬 Oracle Corporation",
+        "🇸🇬 M1 Ltd"
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "30m",
+      "tolerance": 50
+    },
+    {
+      "type": "urltest",
+      "tag": "🇮🇩 Indonesia",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "🇮🇩 Telekomunikasi Indonesia"
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "30m",
+      "tolerance": 50
+    },
+    {
+      "type": "urltest",
+      "tag": "🇸🇬 Singapura",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "🇸🇬 Oracle Corporation",
+        "🇸🇬 M1 Ltd"
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "30m",
+      "tolerance": 50
+    },
+    {
+      "type": "selector",
+      "tag": "🤖 AI Chat",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "🏆 Best Latency",
+        "🇸🇬 Singapura",
+        "🇮🇩 Indonesia",
+        "🌐 ISP"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "🛒 Belanja",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "🇮🇩 Indonesia",
+        "🇸🇬 Singapura",
+        "🌐 ISP"
+      ],
+      "default": "🇮🇩 Indonesia"
+    },
+    {
+      "type": "selector",
+      "tag": "📺 Streaming",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "🇸🇬 Singapura",
+        "🇮🇩 Indonesia",
+        "🌐 ISP"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "💬 Sosial Media",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "🇮🇩 Indonesia",
+        "🇸🇬 Singapura",
+        "🌐 ISP"
+      ],
+      "default": "🇮🇩 Indonesia"
+    },
+    {
+      "type": "selector",
+      "tag": "🏦 Bank",
+      "outbounds": [
+        "🇮🇩 Indonesia",
+        "🌐 ISP",
+        "direct"
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🔞 Porn",
+      "outbounds": [
+        "🌐 ISP",
+        "🇸🇬 Singapura",
+        "REJECT"
+      ],
+      "interrupt_exist_connections": true,
+      "default": "🌐 ISP"
+    },
+    {
+      "type": "selector",
+      "tag": "🚫 Iklan",
+      "outbounds": [
+        "REJECT",
+        "🌐 ISP"
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "🌐 ISP",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "🏆 Best Latency",
+        "🇮🇩 Indonesia",
+        "🇸🇬 Singapura",
+        "🇮🇩 Telekomunikasi Indonesia",
+        "🇸🇬 Oracle Corporation",
+        "🇸🇬 M1 Ltd",
+        "direct"
+      ],
+      "default": "🇮🇩 Indonesia"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "port": 853,
+        "action": "reject"
+      },
+      {
+        "rule_set": [
+          "geosite-rule-doh"
+        ],
+        "action": "reject"
+      },
+      {
+        "rule_set": [
+          "geosite-rule-malicious",
+          "geoip-malicious"
+        ],
+        "action": "reject"
+      },
+      {
+        "rule_set": [
+          "geosite-google-ads"
+        ],
+        "action": "route",
+        "outbound": "🚫 Iklan"
+      },
+      {
+        "rule_set": [
+          "geosite-oisd-full"
+        ],
+        "action": "route",
+        "outbound": "🚫 Iklan"
+      },
+      {
+        "domain": [
+          "rubiconproject.com",
+          "adnxs.com",
+          "adsafeprotected.com",
+          "sessions.bugsnag.com",
+          "browser.sentry-cdn.com",
+          "analytics.pinterest.com",
+          "notes-analytics-events.apple.com",
+          "samsungads.com",
+          "ads.tiktok.com",
+          "udc.yahoo.com"
+        ],
+        "outbound": "🚫 Iklan",
+        "action": "route"
+      },
+      {
+        "domain_keyword": [
+          "pagead",
+          "adsystem",
+          "adservice"
+        ],
+        "outbound": "🚫 Iklan",
+        "action": "route"
+      },
+      {
+        "rule_set": [
+          "geosite-category-porn",
+          "geosite-oisd-nsfw"
+        ],
+        "action": "route",
+        "outbound": "🔞 Porn"
+      },
+      {
+        "port": 22,
+        "action": "route",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "geosite-bank-id"
+        ],
+        "action": "route",
+        "outbound": "🏦 Bank"
+      },
+      {
+        "rule_set": [
+          "geosite-category-ecommerce"
+        ],
+        "action": "route",
+        "outbound": "🛒 Belanja"
+      },
+      {
+        "rule_set": [
+          "geosite-netflix",
+          "geosite-disney",
+          "geosite-hbo",
+          "geosite-primevideo",
+          "geosite-spotify",
+          "geosite-tiktok"
+        ],
+        "action": "route",
+        "outbound": "📺 Streaming"
+      },
+      {
+        "rule_set": [
+          "geosite-facebook",
+          "geosite-instagram",
+          "geosite-twitter",
+          "geosite-telegram"
+        ],
+        "action": "route",
+        "outbound": "💬 Sosial Media"
+      },
+      {
+        "domain_keyword": [
+          "chatgpt",
+          "openai",
+          "claude",
+          "bard",
+          "gemini",
+          "copilot",
+          "perplexity",
+          "deepseek"
+        ],
+        "action": "route",
+        "outbound": "🤖 AI Chat"
+      },
+      {
+        "rule_set": [
+          "geosite-youtube",
+          "geosite-whatsapp",
+          "geosite-google"
+        ],
+        "action": "route",
+        "outbound": "🇮🇩 Indonesia"
+      },
+      {
+        "rule_set": [
+          "geosite-rule-indo"
+        ],
+        "action": "route",
+        "outbound": "🇮🇩 Indonesia"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": [
+              "geoip-id",
+              "geoip-geoid"
+            ]
+          },
+          {
+            "rule_set": [
+              "commonports"
+            ]
+          }
+        ],
+        "action": "route",
+        "outbound": "🇮🇩 Indonesia"
+      },
+      {
+        "ip_is_private": true,
+        "action": "route",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "direct",
+        "action": "route",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "global",
+        "action": "route",
+        "outbound": "🌐 ISP"
+      },
+      {
+        "ip_cidr": [
+          "198.18.0.0/15"
+        ],
+        "action": "route",
+        "outbound": "🌐 ISP"
+      }
+    ],
+    "final": "🌐 ISP",
+    "auto_detect_interface": true,
+    "default_domain_resolver": {
+      "server": "direct-dns"
+    },
+    "rule_set": [
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-youtube",
+        "path": "/etc/momo/rule-set/geosite-youtube.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-google",
+        "path": "/etc/momo/rule-set/geosite-google.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-whatsapp",
+        "path": "/etc/momo/rule-set/geosite-whatsapp.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-facebook",
+        "path": "/etc/momo/rule-set/geosite-facebook.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-instagram",
+        "path": "/etc/momo/rule-set/geosite-instagram.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-twitter",
+        "path": "/etc/momo/rule-set/geosite-twitter.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-telegram",
+        "path": "/etc/momo/rule-set/geosite-telegram.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-netflix",
+        "path": "/etc/momo/rule-set/geosite-netflix.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-disney",
+        "path": "/etc/momo/rule-set/geosite-disney.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-hbo",
+        "path": "/etc/momo/rule-set/geosite-hbo.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-primevideo",
+        "path": "/etc/momo/rule-set/geosite-primevideo.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-spotify",
+        "path": "/etc/momo/rule-set/geosite-spotify.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-tiktok",
+        "path": "/etc/momo/rule-set/geosite-tiktok.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-bank-id",
+        "path": "/etc/momo/rule-set/geosite-bank-id.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-rule-indo",
+        "path": "/etc/momo/rule-set/geosite-rule-indo.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-rule-malicious",
+        "path": "/etc/momo/rule-set/geosite-rule-malicious.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-rule-doh",
+        "path": "/etc/momo/rule-set/geosite-rule-doh.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-google-ads",
+        "path": "/etc/momo/rule-set/geosite-google-ads.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-oisd-full",
+        "path": "/etc/momo/rule-set/geosite-oisd-full.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-oisd-nsfw",
+        "path": "/etc/momo/rule-set/geosite-oisd-nsfw.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-category-porn",
+        "path": "/etc/momo/rule-set/geosite-category-porn.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geosite-category-ecommerce",
+        "path": "/etc/momo/rule-set/geosite-category-ecommerce.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geoip-id",
+        "path": "/etc/momo/rule-set/geoip-id.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geoip-malicious",
+        "path": "/etc/momo/rule-set/geoip-malicious.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geoip-facebook",
+        "path": "/etc/momo/rule-set/geoip-facebook.srs"
+      },
+      {
+        "type": "local",
+        "format": "binary",
+        "tag": "geoip-geoid",
+        "path": "/etc/momo/rule-set/geoip-geoid.srs"
+      },
+      {
+        "type": "local",
+        "format": "source",
+        "tag": "commonports",
+        "path": "/etc/momo/rule-set/commonports.json"
+      }
+    ]
+  },
+  "experimental": {
+    "clash_api": {
+      "external_controller": "0.0.0.0:9090",
+      "external_ui": "ui",
+      "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist-cdn-fonts.zip",
+      "secret": "bitswrt"
+    },
+    "cache_file": {
+      "enabled": true,
+      "store_fakeip": true
+    }
+  }
+}

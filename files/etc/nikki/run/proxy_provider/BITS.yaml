@@ -1,0 +1,68 @@
+# Template akun — ganti SERVER.COM / UUID / PASSWORD dengan data asli,
+# hapus contoh yang tidak dipakai. Entri MODEM-* biarkan (direct via WAN).
+proxies:
+# --- VLESS WS TLS ---
+- name: VLESS-WS
+  type: vless
+  server: SERVER.COM
+  port: 443
+  uuid: UUID
+  udp: true
+  tls: true
+  servername: SERVER.COM
+  network: ws
+  ws-opts:
+    path: /PATH
+    headers:
+      Host: SERVER.COM
+
+# --- VMESS WS TLS ---
+- name: VMESS-WS
+  type: vmess
+  server: SERVER.COM
+  port: 443
+  uuid: UUID
+  alterId: 0
+  cipher: auto
+  udp: true
+  tls: true
+  servername: SERVER.COM
+  network: ws
+  ws-opts:
+    path: /PATH
+    headers:
+      Host: SERVER.COM
+
+# --- TROJAN TLS ---
+- name: TROJAN
+  type: trojan
+  server: SERVER.COM
+  port: 443
+  password: PASSWORD
+  udp: true
+  sni: SERVER.COM
+
+# --- Direct via modem/WAN (jangan dihapus) ---
+- name: MODEM 1
+  type: direct
+  udp: true
+  ip-version: ipv4
+  interface-name: eth1
+
+- name: MODEM 2
+  type: direct
+  udp: true
+  ip-version: ipv4
+  interface-name: eth2
+
+- name: MODEM 3
+  type: direct
+  udp: true
+  ip-version: ipv4
+  interface-name: usb0
+
+- name: MODEM 4
+  type: direct
+  udp: true
+  ip-version: ipv4
+  interface-name: wwan0
