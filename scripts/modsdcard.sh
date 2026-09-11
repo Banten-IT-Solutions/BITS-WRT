@@ -36,18 +36,12 @@ build_mod_sdcard() {
         return 1
     fi
 
-    # Download modification files
-    ariadl "https://github.com/Banten-IT-Solutions/mod-boot-sdcard/archive/refs/heads/main.zip" "main.zip"
-
-    # Extract files
-    log "INFO" "Extracting mod-boot-sdcard..."
-    if ! unzip -q main.zip; then
-        log "ERROR" "Failed to extract mod-boot-sdcard"
+    # Bootloader files vendored in repo (no external download)
+    local bootfiles_dir="${GITHUB_WORKSPACE}/${WORKING_DIR}/scripts/boot"
+    if [ ! -f "${bootfiles_dir}/u-boot.bin" ] || [ ! -f "${bootfiles_dir}/aml_autoscript" ]; then
+        log "ERROR" "Bootloader files not found in ${bootfiles_dir}"
         return 1
     fi
-    rm -f main.zip
-    echo -e "${SUCCESS} mod-boot-sdcard successfully extracted."
-    sleep 3
 
     # Create working directory
     mkdir -p "${suffix}/boot"
@@ -55,9 +49,8 @@ build_mod_sdcard() {
     # Copy required files
     log "INFO" "Preparing image for ${suffix}..."
     cp "$file_to_process" "${suffix}/"
-    if ! sudo cp mod-boot-sdcard-main/BootCardMaker/u-boot.bin \
-        mod-boot-sdcard-main/files/mod-boot-sdcard.tar.gz "${suffix}/"; then
-        log "ERROR" "Failed to copy bootloader or modification files"
+    if ! sudo cp "${bootfiles_dir}/u-boot.bin" "${bootfiles_dir}/aml_autoscript" "${suffix}/"; then
+        log "ERROR" "Failed to copy bootloader files"
         return 1
     fi
 
@@ -106,24 +99,42 @@ build_mod_sdcard() {
         return 1
     fi
 
-    # Apply modifications
-    log "INFO" "Applying boot modifications..."
-    if ! sudo tar -xzf mod-boot-sdcard.tar.gz -C boot; then
-        log "ERROR" "Failed to extract boot modifications"
-        return 1
+    # Apply boot files (gist: revive-dead-emmc-bootloader, Phase 3A + 3B)
+    log "INFO" "Installing boot files..."
+    if [ -f boot/u-boot-p212.bin ]; then
+        for variant in u-boot.ext u-boot.sd u-boot.usb; do
+            sudo cp -f "boot/u-boot-p212.bin" "boot/${variant}"
+        done
+        log "INFO" "u-boot variants installed."
+    else
+        log "WARNING" "u-boot-p212.bin not found in image, skipping u-boot variants."
+    fi
+    sudo cp -f aml_autoscript boot/aml_autoscript
+    log "INFO" "aml_autoscript installed."
+
+    # Armbian-style images ship extlinux.conf.bak; activate it when .conf is missing
+    if [ ! -f boot/extlinux/extlinux.conf ] && [ -f boot/extlinux/extlinux.conf.bak ]; then
+        sudo mv boot/extlinux/extlinux.conf.bak boot/extlinux/extlinux.conf
+        log "INFO" "Activated extlinux.conf from .bak."
     fi
 
-    # Update configuration files
+    # Update configuration files (gist Phase 3C: point DTB to target board)
     log "INFO" "Updating configuration files..."
-    local uenv extlinux boot
-    uenv=$(sudo cat boot/uEnv.txt | grep APPEND | awk -F "root=" '{print $2}')
-    extlinux=$(sudo cat boot/extlinux/extlinux.conf | grep append | awk -F "root=" '{print $2}')
-    boot=$(sudo cat boot/boot.ini | grep dtb | awk -F "/" '{print $4}' | cut -d'"' -f1)
+    local uenv extlinux bootdtb
+    [ -f boot/uEnv.txt ] && uenv=$(sudo cat boot/uEnv.txt | grep APPEND | awk -F "root=" '{print $2}')
+    [ -f boot/extlinux/extlinux.conf ] && extlinux=$(sudo cat boot/extlinux/extlinux.conf | grep append | awk -F "root=" '{print $2}')
+    [ -f boot/boot.ini ] && bootdtb=$(sudo cat boot/boot.ini | grep dtb | awk -F "/" '{print $4}' | cut -d'"' -f1)
 
-    sudo sed -i "s|$extlinux|$uenv|g" boot/extlinux/extlinux.conf
-    sudo sed -i "s|$boot|$dtb|g" boot/boot.ini
-    sudo sed -i "s|$boot|$dtb|g" boot/extlinux/extlinux.conf
-    sudo sed -i "s|$boot|$dtb|g" boot/uEnv.txt
+    if [ -n "$extlinux" ] && [ -n "$uenv" ]; then
+        sudo sed -i "s|$extlinux|$uenv|g" boot/extlinux/extlinux.conf
+    fi
+    if [ -n "$bootdtb" ]; then
+        for f in boot/boot.ini boot/extlinux/extlinux.conf boot/uEnv.txt; do
+            [ -f "$f" ] && sudo sed -i "s|$bootdtb|$dtb|g" "$f"
+        done
+    else
+        log "WARNING" "No DTB reference found in boot.ini, skipping DTB patch."
+    fi
 
     sync
     sudo umount boot
@@ -153,7 +164,6 @@ build_mod_sdcard() {
 
     cd ..
     rm -rf "${suffix}"
-    rm -rf mod-boot-sdcard-main
     cleanup
     echo -e "${SUCCESS} Successfully processed ${suffix}"
     return 0
