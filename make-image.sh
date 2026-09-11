@@ -159,7 +159,7 @@ PACKAGES+=" luci-app-diskman luci-app-disks-info smartmontools kmod-usb-storage 
 PACKAGES+=" luci-theme-bits"
 
 # More
-PACKAGES+=" luci-app-poweroff luci-app-log-viewer luci-app-ramfree"
+PACKAGES+=" luci-app-poweroff luci-app-log-viewer luci-app-ramfree luci-app-tinyfm"
 
 # Amlogic-specific packages
 handle_profile_packages() {
@@ -175,7 +175,6 @@ rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci rpcd-mod-rrdns \
 uhttpd uhttpd-mod-ubus px5g-wolfssl cgi-io \
 bash jq nano ttyd luci-app-ttyd luci-app-ramfree \
 luci-theme-bits luci-theme-bootstrap \
-sing-box-tiny momo luci-app-momo \
 kmod-tun kmod-inet-diag \
 kmod-nft-tproxy kmod-nft-socket kmod-dummy \
 kmod-usb-net-cdc-ether kmod-usb-net-cdc-ncm kmod-usb-net-rndis \
@@ -201,8 +200,8 @@ build_firmware() {
         set_minimal_packages
     else
         handle_profile_packages "$profile"
-        handle_tunnel_option "$tunnel_option"
     fi
+    handle_tunnel_option "$tunnel_option"
 
     # Remote services (applies to both variants)
     handle_remote "$remote"
