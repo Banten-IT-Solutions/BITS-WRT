@@ -24,11 +24,16 @@ echo "###############################################"
 
 # hostname/timezone/NTP/network/dhcp/firewall shipped via files/etc/config/
 
-# custom repo and Disable opkg signature check
+# Banner owned by luci-theme-bits; link it where dropbear/sysinfo expect it
+[ -f /usr/share/bits-theme/banner ] && ln -sf /usr/share/bits-theme/banner /etc/banner
+
+# custom repo and Disable opkg signature check (pin kiddin9 to release branch, same as build time)
 echo "Setup custom repos"
 sed -i 's/option check_signature/# option check_signature/g' /etc/opkg.conf
 echo "src/gz bits https://banten-it-solutions.github.io/BITS-WRT-Packages" >> /etc/opkg/customfeeds.conf
-echo "src/gz custom_pkg https://dl.openwrt.ai/latest/packages/$(grep "OPENWRT_ARCH" /etc/os-release | awk -F '"' '{print $2}')/kiddin9" >> /etc/opkg/customfeeds.conf
+verop="$(grep 'DISTRIB_RELEASE=' /etc/openwrt_release | awk -F"'" '{print $2}' | cut -d. -f1-2)"
+arch="$(grep 'OPENWRT_ARCH' /etc/os-release | awk -F '"' '{print $2}')"
+echo "src/gz custom_pkg https://dl.openwrt.ai/releases/${verop}/packages/${arch}/kiddin9" >> /etc/opkg/customfeeds.conf
 
 # default theme handled by luci-theme-bits (40_bits_theme)
 
@@ -38,11 +43,11 @@ uci set ttyd.@ttyd[0].command='/bin/bash --login'
 uci commit
 
 # configurating openclash (config ships directly as /etc/config/openclash via FILES)
-if opkg list-installed | grep luci-app-openclash > /dev/null; then
+if opkg list-installed | grep -q luci-app-openclash; then
   echo "Openclash Detected!"
   echo "Configuring Core..."
-  chmod +x /etc/openclash/core/clash_meta
-  ln -s /etc/openclash/core/clash_meta /etc/openclash/clash
+  [ -f /etc/openclash/core/clash_meta ] && chmod +x /etc/openclash/core/clash_meta
+  [ -f /etc/openclash/core/clash_meta ] && ln -sf /etc/openclash/core/clash_meta /etc/openclash/clash
   echo "setup complete!"
 else
   echo "No Openclash Detected."
@@ -51,7 +56,7 @@ else
 fi
 
 # configurating Nikki
-if opkg list-installed | grep luci-app-nikki > /dev/null; then
+if opkg list-installed | grep -q luci-app-nikki; then
   echo "setup complete!"
 else
   echo "No Nikki Detected."
@@ -60,7 +65,7 @@ else
 fi
 
 # configurating Momo
-if opkg list-installed | grep luci-app-momo > /dev/null; then
+if opkg list-installed | grep -q luci-app-momo; then
   echo "setup complete!"
 else
   echo "No Momo Detected."

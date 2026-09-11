@@ -14,9 +14,6 @@ config extern 'flash_keep'
 	option firewall '/etc/firewall.user'
 	option uploads '/lib/uci/upload/'
 
-config internal 'languages'
-	option zh_cn '简体中文 (Chinese Simplified)'
-
 config internal 'sauth'
 	option sessionpath '/tmp/luci-sessions'
 	option sessiontime '3600'
@@ -26,9 +23,6 @@ config internal 'ccache'
 
 config internal 'themes'
 	option BITS '/luci-static/bits'
-	option Bootstrap '/luci-static/bootstrap'
-	option BootstrapDark '/luci-static/bootstrap-dark'
-	option BootstrapLight '/luci-static/bootstrap-light'
 
 config internal 'apply'
 	option rollback '90'
