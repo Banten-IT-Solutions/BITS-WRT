@@ -2,6 +2,8 @@
 
 exec > /root/setup.log 2>&1
 
+msg() { echo "$*"; }
+
 # dont remove!
 # dont remove!
 msg "Installed Time: $(date '+%A, %d %B %Y %T')"
@@ -35,23 +37,16 @@ echo "Setup misc settings"
 uci set ttyd.@ttyd[0].command='/bin/bash --login'
 uci commit
 
-# configurating openclash
+# configurating openclash (config ships directly as /etc/config/openclash via FILES)
 if opkg list-installed | grep luci-app-openclash > /dev/null; then
   echo "Openclash Detected!"
   echo "Configuring Core..."
   chmod +x /etc/openclash/core/clash_meta
-  chmod +x /usr/bin/patchoc.sh
-  echo "Patching Openclash Overview"
-  bash /usr/bin/patchoc.sh
-  sed -i '/exit 0/i #/usr/bin/patchoc.sh' /etc/rc.local
-  ln -s /etc/openclash/history/config-wrt.db /etc/openclash/cache.db
-  ln -s /etc/openclash/core/clash_meta  /etc/openclash/clash
-  rm -rf /etc/config/openclash
-  mv /etc/config/openclash1 /etc/config/openclash
+  ln -s /etc/openclash/core/clash_meta /etc/openclash/clash
   echo "setup complete!"
 else
   echo "No Openclash Detected."
-  rm -rf /etc/config/openclash1
+  rm -rf /etc/config/openclash
   rm -rf /etc/openclash
 fi
 

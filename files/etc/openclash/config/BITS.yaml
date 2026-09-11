@@ -1,0 +1,53 @@
+---
+# BITS-WRT simple profile.
+# Hanya pakai kategori GEOSITE standar -> cukup GeoSite bawaan ipk,
+# tanpa GeoIP.dat / Country.mmdb custom / rule-provider.
+# Isi akun di proxy_provider/BITS.yaml, pilih di grup PROXY.
+port: 7890
+socks-port: 7891
+redir-port: 7892
+tproxy-port: 7895
+mixed-port: 7893
+mode: rule
+log-level: silent
+allow-lan: true
+external-controller: 0.0.0.0:9090
+secret: bitswrt
+bind-address: "*"
+external-ui: "/usr/share/openclash/ui"
+ipv6: false
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: redir-host
+  listen: 0.0.0.0:7874
+  default-nameserver:
+  - 1.1.1.1
+  - 8.8.8.8
+  nameserver:
+  - 1.1.1.1
+  - 8.8.8.8
+proxy-groups:
+- name: PROXY
+  type: select
+  proxies:
+  - DIRECT
+  - REJECT
+  use:
+  - BITS
+  url: http://www.gstatic.com/generate_204
+  interval: 60
+proxy-providers:
+  BITS:
+    type: file
+    path: "./proxy_provider/BITS.yaml"
+    health-check:
+      enable: true
+      url: http://www.gstatic.com/generate_204
+      interval: 180
+rules:
+- DST-PORT,7892,REJECT
+- DST-PORT,7895,REJECT
+- IP-CIDR,198.18.0.1/16,REJECT,no-resolve
+- GEOSITE,private,DIRECT
+- MATCH,PROXY

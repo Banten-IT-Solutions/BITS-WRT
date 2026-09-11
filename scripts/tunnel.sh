@@ -20,6 +20,8 @@ download_openclash_core() {
         | grep "browser_download_url" \
         | grep -oE "https.*${meta_file}-v[0-9]+\.[0-9]+\.[0-9]+\.gz" | head -n 1)
 
+    [ -z "${openclash_core}" ] && error_msg "Error: Failed to resolve OpenClash core download URL."
+
     log "INFO" "Downloading OpenClash core (mihomo)"
     mkdir -p "${OPENCLASH_CORE_DIR}"
     ariadl "${openclash_core}" "${OPENCLASH_CORE_DIR}/clash_meta.gz"
