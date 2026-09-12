@@ -76,6 +76,15 @@ PACKAGES_STD_OPKG=""
 PACKAGES_STD_APK=""
 
 # =====================================================================
+# MINIMAL — strip default bloat. Only applied to variant "minimal";
+#   standard keeps everything (OpenWrt defaults + profile packages).
+#   luci-proto-ipv6/ppp stay: hard deps of luci-light.
+# =====================================================================
+PACKAGES_EXCLUDE_MINIMAL=" -odhcp6c -odhcpd-ipv6only -kmod-nf-conntrack6 -kmod-nf-log6 -kmod-nf-reject6 \
+-ppp -ppp-mod-pppoe -kmod-ppp -kmod-pppoe -kmod-pppox -kmod-slhc \
+-mkf2fs -libf2fs6 -kmod-fs-vfat -kmod-nls-cp437 -kmod-nls-iso8859"
+
+# =====================================================================
 # Tunnel option (shared)
 # =====================================================================
 OPENCLASH+="coreutils-nohup bash dnsmasq-full curl ca-certificates ipset ip-full libcap libcap-bin ruby ruby-yaml kmod-tun kmod-inet-diag unzip kmod-nft-tproxy luci-compat luci luci-base luci-app-openclash"
@@ -202,7 +211,7 @@ build_firmware() {
 
     # Package list per variant + package manager
     if [ "$variant" == "minimal" ]; then
-        PACKAGES="$PACKAGES_BASE"
+        PACKAGES="$PACKAGES_BASE $PACKAGES_EXCLUDE_MINIMAL"
     else
         PACKAGES="$PACKAGES_BASE $PACKAGES_STD"
         if [ "$use_apk" == "true" ]; then
