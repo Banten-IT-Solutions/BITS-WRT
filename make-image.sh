@@ -192,7 +192,7 @@ handle_addon() {
 # picked later by ophub `remake -b`; imagebuilder profile stays generic.
 # =====================================================================
 handle_wifi_packages() {
-    PACKAGES+=" ath9k-htc-firmware hostapd hostapd-utils kmod-ath kmod-ath9k kmod-ath9k-common kmod-ath9k-htc kmod-cfg80211 kmod-crypto-acompress kmod-crypto-crc32c kmod-crypto-hash kmod-mac80211 wireless-tools wpa-cli wpa-supplicant"
+    PACKAGES+=" ath9k-htc-firmware hostapd hostapd-utils iw kmod-ath kmod-ath9k kmod-ath9k-common kmod-ath9k-htc kmod-cfg80211 kmod-crypto-acompress kmod-crypto-crc32c kmod-crypto-hash kmod-mac80211 wireless-tools wpa-cli wpa-supplicant"
     EXCLUDED+=" -procd-ujail"
 }
 
