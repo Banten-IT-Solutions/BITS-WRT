@@ -54,8 +54,7 @@ zoneinfo-asia zoneinfo-core"
 # =====================================================================
 # STANDARD — extra rich packages (shared opkg + apk)
 # =====================================================================
-PACKAGES_STD=" luci-lib-ipkg \
-libiwinfo libiwinfo-data libiwinfo-lua liblua liblucihttp liblucihttp-lua libubus-lua libuci-lua lua libc libusb-1.0-0 \
+PACKAGES_STD=" libiwinfo libiwinfo-data libiwinfo-lua liblua liblucihttp liblucihttp-lua libubus-lua libuci-lua lua libc libusb-1.0-0 \
 htop unzip unrar gzip screen httping openssh-sftp-server file \
 cpusage zram-swap adb block-mount microsocks resolveip dmesg \
 coreutils coreutils-base64 coreutils-nohup coreutils-stty coreutils-stat coreutils-sleep coreutils-whoami \
