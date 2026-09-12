@@ -153,13 +153,13 @@ handle_addon() {
 }
 
 # NAS and Hard disk tools
-PACKAGES+=" luci-app-diskman luci-app-disks-info smartmontools kmod-usb-storage kmod-usb-storage-uas ntfs-3g"
+PACKAGES+=" smartmontools kmod-usb-storage kmod-usb-storage-uas ntfs-3g"
 
 # Theme
 PACKAGES+=" luci-theme-bits"
 
 # More
-PACKAGES+=" luci-app-poweroff luci-app-log-viewer luci-app-ramfree luci-app-tinyfm"
+PACKAGES+=" luci-app-tinyfm"
 
 # Amlogic-specific packages
 handle_profile_packages() {
