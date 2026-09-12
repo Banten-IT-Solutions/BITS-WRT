@@ -49,7 +49,7 @@ parted fdisk lsblk btrfs-progs kmod-fs-btrfs \
 kmod-tun kmod-inet-diag \
 kmod-nft-tproxy kmod-nft-socket kmod-dummy \
 kmod-usb-net-cdc-ether kmod-usb-net-cdc-ncm kmod-usb-net-rndis \
-kmod-usb-storage usbutils \
+kmod-usb-storage usbutils usb-modeswitch \
 zoneinfo-asia zoneinfo-core"
 
 # =====================================================================
@@ -212,7 +212,7 @@ handle_wifi_packages() {
 #   luci-proto-*: LuCI WAN protocol; kmod-*: NCM/QMI/MBIM/serial drivers.
 # =====================================================================
 handle_modem_packages() {
-    PACKAGES+=" usb-modeswitch comgt comgt-ncm uqmi umbim luci-proto-3g luci-proto-ncm luci-proto-qmi kmod-usb-net-qmi-wwan kmod-usb-net-cdc-mbim kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm"
+    PACKAGES+=" comgt comgt-ncm uqmi umbim luci-proto-3g luci-proto-ncm luci-proto-qmi kmod-usb-net-qmi-wwan kmod-usb-net-cdc-mbim kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm"
 }
 
 # =====================================================================
