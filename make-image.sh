@@ -54,9 +54,7 @@ zoneinfo-asia zoneinfo-core"
 # =====================================================================
 # STANDARD — extra rich packages (shared opkg + apk)
 # =====================================================================
-PACKAGES_STD=" luci-base luci-lib-base luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-lib-ipkg \
-luci-mod-admin-full luci-mod-network luci-mod-status luci-mod-system \
-luci-proto-ipv6 luci-proto-ppp \
+PACKAGES_STD=" luci-lib-ipkg \
 libiwinfo libiwinfo-data libiwinfo-lua liblua liblucihttp liblucihttp-lua libubus-lua libuci-lua lua libc libusb-1.0-0 \
 htop unzip unrar gzip screen httping openssh-sftp-server file \
 cpusage zram-swap adb block-mount microsocks resolveip dmesg \
