@@ -18,11 +18,12 @@ on:
       openwrt_version:
         description: "Select OpenWrt Version"
         required: true
-        default: "OpenWrt 24.10.8"
+        default: "OpenWrt 23.05 (opkg)"
         type: choice
         options:
-          - OpenWrt 24.10.8
-          - OpenWrt 25.12.5
+          - OpenWrt 23.05 (opkg)
+          - OpenWrt 24.10 (apk)
+          - OpenWrt 25.12 (apk)
       openwrt_kernel:
         description: "Select Kernel Version"
         required: false
@@ -181,8 +182,9 @@ jobs:
             B860H)  BOARD="B860H";  openwrt_board="s905x-b860h" ;;
           esac
           case "${{ inputs.openwrt_version }}" in
-            "OpenWrt 24.10.8") RELEASE_BRANCH="openwrt:24.10.8" ;;
-            "OpenWrt 25.12.5") RELEASE_BRANCH="openwrt:25.12.5" ;;
+            "OpenWrt 23.05 (opkg)") RELEASE_BRANCH="openwrt:23.05.5" ;;
+            "OpenWrt 24.10 (apk)")  RELEASE_BRANCH="openwrt:24.10.8" ;;
+            "OpenWrt 25.12 (apk)")  RELEASE_BRANCH="openwrt:25.12.5" ;;
           esac
           case "${{ inputs.openwrt_kernel }}" in
             "Kernel 6.6")  KERNEL="6.6.y" ;;
@@ -257,6 +259,12 @@ jobs:
           echo "VEROP=$VEROP" >> $GITHUB_ENV
           echo "DOWNLOAD_BASE=https://downloads.${BASE}.org" >> $GITHUB_ENV
 
+          # Package manager: apk for OpenWrt >= 24.10, opkg otherwise
+          MAJOR="$(echo "${BRANCH}" | cut -d'.' -f1)"
+          if [ "${MAJOR}" -ge 24 ]; then USE_APK="true"; PKG_EXT="apk"; else USE_APK="false"; PKG_EXT="ipk"; fi
+          echo "USE_APK=${USE_APK}" >> $GITHUB_ENV
+          echo "PKG_EXT=${PKG_EXT}" >> $GITHUB_ENV
+
           # Set date variable
           echo "DATE=$(date +'%d%m%Y')" >> $GITHUB_ENV
 
@@ -313,7 +321,7 @@ jobs:
           chmod +x scripts/packages.sh
           ./scripts/packages.sh
 
-          PACKAGE_COUNT=$(find packages -type f -name "*.ipk" | wc -l)
+          PACKAGE_COUNT=$(find packages -type f -name "*.${PKG_EXT}" | wc -l)
           echo "Downloaded $PACKAGE_COUNT external packages"
           echo "status=success" >> $GITHUB_OUTPUT
 

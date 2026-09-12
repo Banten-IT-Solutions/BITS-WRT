@@ -238,9 +238,17 @@ download_packages() {
                     continue
                 fi
                 
-                # Find matching file
+                # Find matching file (match basename, not full URL, so the repo
+                # name embedded in the URL does not false-positive)
                 local download_url
-                download_url=$(echo "$file_urls" | grep -E '\.(ipk|apk)$' | grep -i "$filename" | sort -V | tail -1)
+                download_url=$(
+                    echo "$file_urls" |
+                        grep -E "\.${PKG_EXT:-ipk}$" |
+                        while read -r u; do
+                            grep -qiE "$filename" <<< "$(basename "$u")" && echo "$u"
+                        done |
+                        sort -V | tail -1
+                )
                 
                 if [ -z "$download_url" ]; then
                     log "ERROR" "No matching package found for $filename"

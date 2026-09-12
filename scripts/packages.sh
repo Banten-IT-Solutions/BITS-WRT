@@ -4,7 +4,7 @@
 
 # GitHub release packages (downloaded to packages/)
 declare -a packages_github=(
-    "bandix_.*aarch64_generic|https://api.github.com/repos/timsaya/openwrt-bandix/releases/latest"
+    "bandix.*aarch64_generic|https://api.github.com/repos/timsaya/openwrt-bandix/releases/latest"
     "luci-app-bandix|https://api.github.com/repos/timsaya/luci-app-bandix/releases/latest"
 )
 
