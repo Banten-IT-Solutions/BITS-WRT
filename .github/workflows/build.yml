@@ -18,12 +18,11 @@ on:
       openwrt_version:
         description: "Select OpenWrt Version"
         required: true
-        default: "OpenWrt 24.10 (opkg)"
+        default: "OpenWrt 24.10"
         type: choice
         options:
-          - OpenWrt 23.05 (opkg)
-          - OpenWrt 24.10 (opkg)
-          - OpenWrt 25.12 (apk)
+          - OpenWrt 24.10
+          - OpenWrt 25.12
       openwrt_kernel:
         description: "Select Kernel Version"
         required: false
@@ -182,9 +181,8 @@ jobs:
             B860H)  BOARD="B860H";  openwrt_board="s905x-b860h" ;;
           esac
           case "${{ inputs.openwrt_version }}" in
-            "OpenWrt 23.05 (opkg)") RELEASE_BRANCH="openwrt:23.05.5" ;;
-            "OpenWrt 24.10 (opkg)") RELEASE_BRANCH="openwrt:24.10.8" ;;
-            "OpenWrt 25.12 (apk)")  RELEASE_BRANCH="openwrt:25.12.5" ;;
+            "OpenWrt 24.10") RELEASE_BRANCH="openwrt:24.10.8" ;;
+            "OpenWrt 25.12") RELEASE_BRANCH="openwrt:25.12.5" ;;
           esac
           case "${{ inputs.openwrt_kernel }}" in
             "Kernel 6.6")  KERNEL="6.6.y" ;;
