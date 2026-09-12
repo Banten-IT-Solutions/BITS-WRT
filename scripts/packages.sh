@@ -6,6 +6,7 @@
 declare -a packages_github=(
     "bandix.*aarch64_generic|https://api.github.com/repos/timsaya/openwrt-bandix/releases/latest"
     "luci-app-bandix|https://api.github.com/repos/timsaya/luci-app-bandix/releases/latest"
+    "luci-app-openclash|https://api.github.com/repos/vernesong/OpenClash/releases/latest"
 )
 
 # Verify downloaded packages exist
