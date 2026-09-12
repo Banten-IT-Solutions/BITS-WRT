@@ -37,10 +37,10 @@ EXCLUDED=""
 PACKAGES+=" -dnsmasq dnsmasq-full cgi-io libiwinfo libiwinfo-data libiwinfo-lua liblua \
 luci-base luci-lib-base luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-mod-admin-full \
 cpusage ttyd dmesg kmod-tun luci-lib-ipkg \
-zram-swap adb parted losetup resize2fs luci luci-ssl block-mount htop bash curl wget-ssl \
+zram-swap adb luci luci-ssl block-mount htop bash curl wget-ssl \
 tar unzip unrar gzip jq luci-app-ttyd nano httping screen openssh-sftp-server \
-liblucihttp liblucihttp-lua libubus-lua lua luci-app-firewall luci-app-opkg \
-ca-bundle ca-certificates luci-compat coreutils-sleep coreutils-whoami file lolcat \
+liblucihttp liblucihttp-lua libubus-lua lua luci-app-firewall luci-app-package-manager \
+ca-bundle ca-certificates luci-compat coreutils-sleep coreutils-whoami file \
 luci-base luci-lib-base luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-mod-admin-full \
 luci-mod-network luci-mod-status luci-mod-system luci-proto-ipv6 luci-proto-ppp \
 luci-theme-bootstrap rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci \
@@ -153,7 +153,7 @@ handle_addon() {
 }
 
 # NAS and Hard disk tools
-PACKAGES+=" smartmontools kmod-usb-storage kmod-usb-storage-uas ntfs-3g"
+PACKAGES+=" kmod-usb-storage kmod-usb-storage-uas ntfs-3g"
 
 # Theme
 PACKAGES+=" luci-theme-bits"
