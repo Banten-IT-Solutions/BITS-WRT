@@ -45,6 +45,7 @@ uhttpd uhttpd-mod-ubus cgi-io \
 luci-theme-bits luci-theme-bootstrap \
 bash jq nano curl wget-ssl ca-bundle ca-certificates ip-full \
 ttyd luci-app-ttyd \
+parted fdisk lsblk btrfs-progs kmod-fs-btrfs \
 kmod-tun kmod-inet-diag \
 kmod-nft-tproxy kmod-nft-socket kmod-dummy \
 kmod-usb-net-cdc-ether kmod-usb-net-cdc-ncm kmod-usb-net-rndis \
