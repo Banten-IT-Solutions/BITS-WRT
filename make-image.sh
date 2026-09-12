@@ -33,8 +33,10 @@ make info
 PACKAGES=""
 EXCLUDED=""
 
-# Base packages
-PACKAGES+=" -dnsmasq dnsmasq-full cgi-io libiwinfo libiwinfo-data libiwinfo-lua liblua \
+# =====================================================================
+# BASE packages (shared: opkg 24.10 + apk 25.12)
+# =====================================================================
+PACKAGES_BASE=" -dnsmasq dnsmasq-full cgi-io libiwinfo libiwinfo-data libiwinfo-lua liblua \
 luci-base luci-lib-base luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-mod-admin-full \
 cpusage ttyd dmesg kmod-tun luci-lib-ipkg \
 zram-swap adb luci luci-ssl block-mount htop bash curl wget-ssl \
@@ -51,18 +53,32 @@ perl perlbase-base perlbase-bytes perlbase-class perlbase-config perlbase-cwd pe
 perlbase-filehandle perlbase-i18n perlbase-integer perlbase-io perlbase-list perlbase-locale perlbase-params perlbase-posix \
 perlbase-re perlbase-scalar perlbase-selectsaver perlbase-socket perlbase-symbol perlbase-tie perlbase-time perlbase-unicore perlbase-utf8 perlbase-xsloader"
 
-# USB Ethernet & Phone Tether Driver
-PACKAGES+=" kmod-usb-net-rtl8150 kmod-usb-net-rtl8152 kmod-usb-net-asix kmod-usb-net-asix-ax88179"
-PACKAGES+=" kmod-mii kmod-usb-net kmod-usb-net-cdc-ether kmod-usb-net-cdc-ncm kmod-usb-net-rndis \
+# USB Ethernet & Phone Tether Driver (shared)
+PACKAGES_BASE+=" kmod-usb-net-rtl8150 kmod-usb-net-rtl8152 kmod-usb-net-asix kmod-usb-net-asix-ax88179"
+PACKAGES_BASE+=" kmod-mii kmod-usb-net kmod-usb-net-cdc-ether kmod-usb-net-cdc-ncm kmod-usb-net-rndis \
 kmod-usb-ohci kmod-usb-uhci kmod-usb2 kmod-usb-ehci kmod-nls-utf8 \
 usbutils libusb-1.0-0 kmod-phy-broadcom kmod-phylib-broadcom kmod-tg3"
 
-# Tunnel option
+# =====================================================================
+# STANDARD-only extras, split per package manager (maintenance point)
+#   opkg (24.10): kiddin9 feed tersedia -> extra LuCI apps
+#   apk  (25.12): kiddin9 opkg-only -> tidak ada
+# =====================================================================
+PACKAGES_STD_OPKG=" luci-app-diskman luci-app-disks-info luci-app-poweroff luci-app-log-viewer luci-app-ramfree"
+PACKAGES_STD_APK=""
+
+# =====================================================================
+# COMMON trailer (NAS + theme + file manager), shared
+# =====================================================================
+PACKAGES_COMMON=" kmod-usb-storage kmod-usb-storage-uas ntfs-3g luci-theme-bits luci-app-tinyfm"
+
+# =====================================================================
+# Tunnel option (shared)
+# =====================================================================
 OPENCLASH+="coreutils-nohup bash dnsmasq-full curl ca-certificates ipset ip-full libcap libcap-bin ruby ruby-yaml kmod-tun kmod-inet-diag unzip kmod-nft-tproxy luci-compat luci luci-base luci-app-openclash"
 NIKKI+="nikki luci-app-nikki"
 MOMO+="momo luci-app-momo"
 
-# Tunnel options handling
 handle_tunnel_option() {
     case "$1" in
         "openclash")
@@ -95,7 +111,9 @@ handle_tunnel_option() {
     esac
 }
 
-# Remote Services (controlled by `remote` argument)
+# =====================================================================
+# Remote Services (shared)
+# =====================================================================
 TAILSCALE+=" tailscale luci-app-tailscale"
 CLOUDFLARE+=" cloudflared luci-app-cloudflared"
 
@@ -115,7 +133,9 @@ handle_remote() {
     esac
 }
 
-# Container runtime (controlled by `container` argument)
+# =====================================================================
+# Container runtime (shared)
+# =====================================================================
 DOCKER+=" dockerd docker luci-app-dockerman"
 PODMAN+=" podman"
 
@@ -132,7 +152,9 @@ handle_container() {
     esac
 }
 
-# BITS addons (controlled by `addon` argument)
+# =====================================================================
+# BITS addons (shared)
+# =====================================================================
 BANDIX+=" bandix luci-app-bandix"
 BOT+=" bitsnetworksbot luci-app-bitsnetworksbot"
 
@@ -152,22 +174,17 @@ handle_addon() {
     esac
 }
 
-# NAS and Hard disk tools
-PACKAGES+=" kmod-usb-storage kmod-usb-storage-uas ntfs-3g"
-
-# Theme
-PACKAGES+=" luci-theme-bits"
-
-# More
-PACKAGES+=" luci-app-tinyfm"
-
-# Amlogic-specific packages
+# =====================================================================
+# Amlogic-specific packages (standard)
+# =====================================================================
 handle_profile_packages() {
     PACKAGES+=" ath9k-htc-firmware btrfs-progs hostapd hostapd-utils kmod-ath kmod-ath9k kmod-ath9k-common kmod-ath9k-htc kmod-cfg80211 kmod-crypto-acompress kmod-crypto-crc32c kmod-crypto-hash kmod-fs-btrfs kmod-mac80211 wireless-tools wpa-cli wpa-supplicant"
     EXCLUDED+=" -procd-ujail"
 }
 
-# Minimal profile: only the packages discussed (core + user apps)
+# =====================================================================
+# Minimal profile: core + user apps (lean, version-agnostic)
+# =====================================================================
 set_minimal_packages() {
 PACKAGES+=" -dnsmasq -procd-ujail dnsmasq-full \
 luci luci-ssl luci-compat luci-lua-runtime \
@@ -183,7 +200,10 @@ curl ip-full ca-certificates \
 zoneinfo-asia zoneinfo-core"
 }
 
+# =====================================================================
 # Main build function
+#   $1 profile  $2 tunnel  $3 variant  $4 remote  $5 container  $6 addon  $7 use_apk
+# =====================================================================
 build_firmware() {
     local profile=$1
     local tunnel_option=$2
@@ -191,33 +211,36 @@ build_firmware() {
     local remote=$4
     local container=$5
     local addon=$6
+    local use_apk=$7
 
-    log "Starting build for profile: $profile (variant: ${variant:-standard})"
-    
-    # Handle packages based on profile, tunnel option, and variant
+    log "Starting build for profile: $profile (variant: ${variant:-standard}, apk: ${use_apk:-false})"
+
+    # Package list per variant + package manager
     if [ "$variant" == "minimal" ]; then
         PACKAGES=""
         set_minimal_packages
     else
+        PACKAGES="$PACKAGES_BASE $PACKAGES_COMMON"
         handle_profile_packages "$profile"
+        if [ "$use_apk" == "true" ]; then
+            PACKAGES+="$PACKAGES_STD_APK"
+        else
+            PACKAGES+="$PACKAGES_STD_OPKG"
+        fi
     fi
+
+    # Tunnel / remote / container / addon apply to both variants
     handle_tunnel_option "$tunnel_option"
-
-    # Remote services (applies to both variants)
     handle_remote "$remote"
-
-    # Container runtime (applies to both variants)
     handle_container "$container"
-
-    # BITS addons (applies to both variants)
     handle_addon "$addon"
-    
+
     # Custom Files
     FILES="files"
-    
+
     log "Building image..."
     make image PROFILE="$profile" PACKAGES="$PACKAGES $EXCLUDED" FILES="$FILES" 2>&1 | tee -a "$BUILD_LOG"
-    
+
     if [ "${PIPESTATUS[0]}" -eq 0 ]; then
         log "Build completed successfully!"
     else
@@ -230,4 +253,4 @@ if [ -z "$1" ]; then
     error "Profile not specified"
 fi
 
-build_firmware "$1" "$2" "$3" "$4" "$5" "$6"
+build_firmware "$1" "$2" "$3" "$4" "$5" "$6" "$7"

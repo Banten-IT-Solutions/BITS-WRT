@@ -361,7 +361,7 @@ jobs:
             fi
 
             # Build image
-            time ./make-image.sh ${{ env.PROFILE }} $tunnel ${{ env.VARIANT }} ${{ env.REMOTE }} ${{ env.CONTAINER }} ${{ env.ADDON }}
+            time ./make-image.sh ${{ env.PROFILE }} $tunnel ${{ env.VARIANT }} ${{ env.REMOTE }} ${{ env.CONTAINER }} ${{ env.ADDON }} ${{ env.USE_APK }}
 
             # Move and rename output files
             for file in bin/targets/"${{ env.TARGET_SYSTEM }}"/*generic-rootfs.tar.gz; do
