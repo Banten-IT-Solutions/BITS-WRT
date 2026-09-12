@@ -23,7 +23,6 @@ add_custom_feeds_opkg() {
 src/gz bits https://banten-it-solutions.github.io/BITS-WRT-Packages
 src/gz momo https://momomomo.pages.dev/openwrt-${VEROP}/${ARCH_3}/momo
 src/gz nikki https://nikkinikki.pages.dev/openwrt-${VEROP}/${ARCH_3}/nikki
-src/gz kiddin9 https://dl.openwrt.ai/releases/${VEROP}/packages/${ARCH_3}/kiddin9
 EOF
 }
 

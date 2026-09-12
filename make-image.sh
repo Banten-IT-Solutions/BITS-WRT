@@ -73,10 +73,9 @@ luci-app-tinyfm"
 
 # =====================================================================
 # STANDARD extras, split per package manager (maintenance point)
-#   opkg (24.10): kiddin9 feed tersedia -> extra LuCI apps
-#   apk  (25.12): kiddin9 opkg-only -> tidak ada
+#   opkg (24.10) / apk (25.12) — kosong untuk sekarang
 # =====================================================================
-PACKAGES_STD_OPKG=" luci-app-diskman luci-app-disks-info luci-app-poweroff luci-app-log-viewer luci-app-ramfree"
+PACKAGES_STD_OPKG=""
 PACKAGES_STD_APK=""
 
 # =====================================================================
