@@ -40,9 +40,17 @@ on:
           - Minimal
           - Standard
       wifi:
-        description: "Enable WiFi (USB dongle)"
+        description: "Enable WiFi"
         required: true
         default: "Yes"
+        type: choice
+        options:
+          - "Yes"
+          - "No"
+      modem:
+        description: "Support Extra Modem (4G/LTE USB)"
+        required: true
+        default: "No"
         type: choice
         options:
           - "Yes"
@@ -138,6 +146,7 @@ jobs:
           echo "openwrt_kernel  : ${{ inputs.openwrt_kernel }}"
           echo "variant         : ${{ inputs.variant }}"
           echo "wifi            : ${{ inputs.wifi }}"
+          echo "modem           : ${{ inputs.modem }}"
           echo "tunnel          : ${{ inputs.tunnel }}"
           echo "remote          : ${{ inputs.remote }}"
           echo "container       : ${{ inputs.container }}"
@@ -205,6 +214,10 @@ jobs:
             "Yes") WIFI="true" ;;
             "No")  WIFI="false" ;;
           esac
+          case "${{ inputs.modem }}" in
+            "Yes") MODEM="true" ;;
+            "No")  MODEM="false" ;;
+          esac
           case "${{ inputs.tunnel }}" in
             "All In One")               TUNNEL="all" ;;
             "OpenClash")                TUNNEL="openclash" ;;
@@ -248,6 +261,7 @@ jobs:
           echo "KERNEL=$KERNEL" >> $GITHUB_ENV
           echo "VARIANT=$VARIANT" >> $GITHUB_ENV
           echo "WIFI=$WIFI" >> $GITHUB_ENV
+          echo "MODEM=$MODEM" >> $GITHUB_ENV
           echo "TUNNEL=$TUNNEL" >> $GITHUB_ENV
           echo "REMOTE=$REMOTE" >> $GITHUB_ENV
           echo "CONTAINER=$CONTAINER" >> $GITHUB_ENV
@@ -375,7 +389,7 @@ jobs:
             fi
 
             # Build image
-            time ./make-image.sh ${{ env.PROFILE }} $tunnel ${{ env.VARIANT }} ${{ env.REMOTE }} ${{ env.CONTAINER }} ${{ env.ADDON }} ${{ env.USE_APK }} ${{ env.WIFI }}
+            time ./make-image.sh ${{ env.PROFILE }} $tunnel ${{ env.VARIANT }} ${{ env.REMOTE }} ${{ env.CONTAINER }} ${{ env.ADDON }} ${{ env.USE_APK }} ${{ env.WIFI }} ${{ env.MODEM }}
 
             # Move and rename output files
             for file in bin/targets/"${{ env.TARGET_SYSTEM }}"/*generic-rootfs.tar.gz; do

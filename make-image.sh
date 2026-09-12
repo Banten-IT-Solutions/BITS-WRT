@@ -207,8 +207,17 @@ handle_wifi_packages() {
 }
 
 # =====================================================================
+# Extra Modem (4G/LTE USB dongle / modem rakitan). Applied to both variants.
+#   usb-modeswitch: switch dongle storage->modem; comgt/uqmi/umbim: dial/proto;
+#   luci-proto-*: LuCI WAN protocol; kmod-*: NCM/QMI/MBIM/serial drivers.
+# =====================================================================
+handle_modem_packages() {
+    PACKAGES+=" usb-modeswitch comgt comgt-ncm uqmi umbim luci-proto-3g luci-proto-ncm luci-proto-qmi kmod-usb-net-qmi-wwan kmod-usb-net-cdc-mbim kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm"
+}
+
+# =====================================================================
 # Main build function
-#   $1 profile  $2 tunnel  $3 variant  $4 remote  $5 container  $6 addon  $7 use_apk  $8 enable_wifi
+#   $1 profile  $2 tunnel  $3 variant  $4 remote  $5 container  $6 addon  $7 use_apk  $8 enable_wifi  $9 enable_modem
 # =====================================================================
 build_firmware() {
     local profile=$1
@@ -219,8 +228,9 @@ build_firmware() {
     local addon=$6
     local use_apk=$7
     local enable_wifi=$8
+    local enable_modem=$9
 
-    log "Starting build for profile: $profile (variant: ${variant:-standard}, apk: ${use_apk:-false}, wifi: ${enable_wifi:-false})"
+    log "Starting build for profile: $profile (variant: ${variant:-standard}, apk: ${use_apk:-false}, wifi: ${enable_wifi:-false}, modem: ${enable_modem:-false})"
 
     # Package list per variant + package manager
     if [ "$variant" == "minimal" ]; then
@@ -237,6 +247,11 @@ build_firmware() {
     # WiFi applied to BOTH variants via build option (default on)
     if [ "$enable_wifi" == "true" ]; then
         handle_wifi_packages "$use_apk"
+    fi
+
+    # Extra modem support applied to BOTH variants (default off)
+    if [ "$enable_modem" == "true" ]; then
+        handle_modem_packages
     fi
 
     # attendedsysupgrade is a 25.x-only default; drop it for parity with 24.10
@@ -268,4 +283,4 @@ if [ -z "$1" ]; then
     error "Profile not specified"
 fi
 
-build_firmware "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8"
+build_firmware "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
