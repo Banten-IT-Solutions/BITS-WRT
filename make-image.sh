@@ -59,7 +59,6 @@ PACKAGES_STD=" libiwinfo libiwinfo-data libiwinfo-lua liblua liblucihttp libluci
 htop unzip unrar gzip screen httping openssh-sftp-server file \
 cpusage zram-swap adb block-mount microsocks resolveip dmesg \
 coreutils coreutils-base64 coreutils-nohup coreutils-stty coreutils-stat coreutils-sleep coreutils-whoami \
-ipset iptables iptables-legacy iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
 perl perlbase-base perlbase-bytes perlbase-class perlbase-config perlbase-cwd perlbase-dynaloader perlbase-errno perlbase-essential perlbase-fcntl perlbase-file \
 perlbase-filehandle perlbase-i18n perlbase-integer perlbase-io perlbase-list perlbase-locale perlbase-params perlbase-posix \
 perlbase-re perlbase-scalar perlbase-selectsaver perlbase-socket perlbase-symbol perlbase-tie perlbase-time perlbase-unicore perlbase-utf8 perlbase-xsloader \
@@ -88,7 +87,7 @@ PACKAGES_EXCLUDE_MINIMAL=" -odhcp6c -odhcpd-ipv6only -kmod-nf-conntrack6 -kmod-n
 # =====================================================================
 # Tunnel option (shared)
 # =====================================================================
-OPENCLASH+="coreutils-nohup bash dnsmasq-full curl ca-certificates ipset ip-full libcap libcap-bin ruby ruby-yaml kmod-tun kmod-inet-diag unzip kmod-nft-tproxy luci-compat luci luci-base luci-app-openclash"
+OPENCLASH+="coreutils-nohup bash dnsmasq-full curl ca-certificates ipset iptables-nft ip-full libcap libcap-bin ruby ruby-yaml kmod-tun kmod-inet-diag unzip kmod-nft-tproxy luci-compat luci luci-base luci-app-openclash"
 NIKKI+="nikki luci-app-nikki"
 MOMO+="momo luci-app-momo"
 
