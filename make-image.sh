@@ -34,43 +34,50 @@ PACKAGES=""
 EXCLUDED=""
 
 # =====================================================================
-# BASE packages (shared: opkg 24.10 + apk 25.12)
+# BASE — minimal inti, dipakai SEMUA variant (opkg + apk)
+#   cuma: LuCI inti, dnsmasq-full, tunnel kmod, USB tethering (HiLink/rndis)
 # =====================================================================
-PACKAGES_BASE=" -dnsmasq dnsmasq-full cgi-io libiwinfo libiwinfo-data libiwinfo-lua liblua \
-luci-base luci-lib-base luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-mod-admin-full \
-cpusage ttyd dmesg kmod-tun luci-lib-ipkg \
-zram-swap adb luci luci-ssl block-mount htop bash curl wget-ssl \
-tar unzip unrar gzip jq luci-app-ttyd nano httping screen openssh-sftp-server \
-liblucihttp liblucihttp-lua libubus-lua lua luci-app-firewall luci-app-package-manager \
-ca-bundle ca-certificates luci-compat coreutils-sleep coreutils-whoami file \
-luci-base luci-lib-base luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-mod-admin-full \
-luci-mod-network luci-mod-status luci-mod-system luci-proto-ipv6 luci-proto-ppp \
-luci-theme-bootstrap rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci \
-rpcd-mod-rrdns uhttpd uhttpd-mod-ubus coreutils coreutils-base64 coreutils-nohup coreutils-stty libc coreutils-stat \
-ip-full libuci-lua microsocks resolveip ipset iptables iptables-legacy \
-iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat luci-lua-runtime zoneinfo-asia zoneinfo-core \
+PACKAGES_BASE=" -dnsmasq dnsmasq-full \
+luci luci-ssl luci-compat luci-lua-runtime \
+luci-app-firewall luci-app-package-manager \
+rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci rpcd-mod-rrdns \
+uhttpd uhttpd-mod-ubus cgi-io \
+luci-theme-bits luci-theme-bootstrap \
+bash jq nano curl wget-ssl ca-bundle ca-certificates ip-full \
+ttyd luci-app-ttyd \
+kmod-tun kmod-inet-diag \
+kmod-nft-tproxy kmod-nft-socket kmod-dummy \
+kmod-usb-net-cdc-ether kmod-usb-net-cdc-ncm kmod-usb-net-rndis \
+kmod-usb-storage usbutils \
+zoneinfo-asia zoneinfo-core"
+
+# =====================================================================
+# STANDARD — extra rich packages (shared opkg + apk)
+# =====================================================================
+PACKAGES_STD=" luci-base luci-lib-base luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-lib-ipkg \
+luci-mod-admin-full luci-mod-network luci-mod-status luci-mod-system \
+luci-proto-ipv6 luci-proto-ppp \
+libiwinfo libiwinfo-data libiwinfo-lua liblua liblucihttp liblucihttp-lua libubus-lua libuci-lua lua libc libusb-1.0-0 \
+htop unzip unrar gzip screen httping openssh-sftp-server file \
+cpusage zram-swap adb block-mount microsocks resolveip dmesg \
+coreutils coreutils-base64 coreutils-nohup coreutils-stty coreutils-stat coreutils-sleep coreutils-whoami \
+ipset iptables iptables-legacy iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
 perl perlbase-base perlbase-bytes perlbase-class perlbase-config perlbase-cwd perlbase-dynaloader perlbase-errno perlbase-essential perlbase-fcntl perlbase-file \
 perlbase-filehandle perlbase-i18n perlbase-integer perlbase-io perlbase-list perlbase-locale perlbase-params perlbase-posix \
-perlbase-re perlbase-scalar perlbase-selectsaver perlbase-socket perlbase-symbol perlbase-tie perlbase-time perlbase-unicore perlbase-utf8 perlbase-xsloader"
-
-# USB Ethernet & Phone Tether Driver (shared)
-PACKAGES_BASE+=" kmod-usb-net-rtl8150 kmod-usb-net-rtl8152 kmod-usb-net-asix kmod-usb-net-asix-ax88179"
-PACKAGES_BASE+=" kmod-mii kmod-usb-net kmod-usb-net-cdc-ether kmod-usb-net-cdc-ncm kmod-usb-net-rndis \
-kmod-usb-ohci kmod-usb-uhci kmod-usb2 kmod-usb-ehci kmod-nls-utf8 \
-usbutils libusb-1.0-0 kmod-phy-broadcom kmod-phylib-broadcom kmod-tg3"
+perlbase-re perlbase-scalar perlbase-selectsaver perlbase-socket perlbase-symbol perlbase-tie perlbase-time perlbase-unicore perlbase-utf8 perlbase-xsloader \
+kmod-usb-net-rtl8150 kmod-usb-net-rtl8152 kmod-usb-net-asix kmod-usb-net-asix-ax88179 \
+kmod-mii kmod-usb-net kmod-usb-ohci kmod-usb-uhci kmod-usb2 kmod-usb-ehci kmod-nls-utf8 \
+kmod-phy-broadcom kmod-phylib-broadcom kmod-tg3 \
+kmod-usb-storage-uas ntfs-3g \
+luci-app-tinyfm"
 
 # =====================================================================
-# STANDARD-only extras, split per package manager (maintenance point)
+# STANDARD extras, split per package manager (maintenance point)
 #   opkg (24.10): kiddin9 feed tersedia -> extra LuCI apps
 #   apk  (25.12): kiddin9 opkg-only -> tidak ada
 # =====================================================================
 PACKAGES_STD_OPKG=" luci-app-diskman luci-app-disks-info luci-app-poweroff luci-app-log-viewer luci-app-ramfree"
 PACKAGES_STD_APK=""
-
-# =====================================================================
-# COMMON trailer (NAS + theme + file manager), shared
-# =====================================================================
-PACKAGES_COMMON=" kmod-usb-storage kmod-usb-storage-uas ntfs-3g luci-theme-bits luci-app-tinyfm"
 
 # =====================================================================
 # Tunnel option (shared)
@@ -183,24 +190,6 @@ handle_profile_packages() {
 }
 
 # =====================================================================
-# Minimal profile: core + user apps (lean, version-agnostic)
-# =====================================================================
-set_minimal_packages() {
-PACKAGES+=" -dnsmasq -procd-ujail dnsmasq-full \
-luci luci-ssl luci-compat luci-lua-runtime \
-rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci rpcd-mod-rrdns \
-uhttpd uhttpd-mod-ubus cgi-io \
-bash jq nano ttyd luci-app-ttyd \
-luci-theme-bits luci-theme-bootstrap \
-kmod-tun kmod-inet-diag \
-kmod-nft-tproxy kmod-nft-socket kmod-dummy \
-kmod-usb-net-cdc-ether kmod-usb-net-cdc-ncm kmod-usb-net-rndis \
-kmod-usb-storage usbutils \
-curl ip-full ca-certificates \
-zoneinfo-asia zoneinfo-core"
-}
-
-# =====================================================================
 # Main build function
 #   $1 profile  $2 tunnel  $3 variant  $4 remote  $5 container  $6 addon  $7 use_apk
 # =====================================================================
@@ -217,16 +206,15 @@ build_firmware() {
 
     # Package list per variant + package manager
     if [ "$variant" == "minimal" ]; then
-        PACKAGES=""
-        set_minimal_packages
+        PACKAGES="$PACKAGES_BASE"
     else
-        PACKAGES="$PACKAGES_BASE $PACKAGES_COMMON"
-        handle_profile_packages "$profile"
+        PACKAGES="$PACKAGES_BASE $PACKAGES_STD"
         if [ "$use_apk" == "true" ]; then
             PACKAGES+="$PACKAGES_STD_APK"
         else
             PACKAGES+="$PACKAGES_STD_OPKG"
         fi
+        handle_profile_packages "$profile"
     fi
 
     # Tunnel / remote / container / addon apply to both variants
