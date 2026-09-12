@@ -39,6 +39,14 @@ on:
         options:
           - Minimal
           - Standard
+      wifi:
+        description: "Enable WiFi (USB dongle)"
+        required: true
+        default: "Yes"
+        type: choice
+        options:
+          - "Yes"
+          - "No"
       tunnel:
         description: "Select VPN Client"
         required: true
@@ -129,6 +137,7 @@ jobs:
           echo "openwrt_version : ${{ inputs.openwrt_version }}"
           echo "openwrt_kernel  : ${{ inputs.openwrt_kernel }}"
           echo "variant         : ${{ inputs.variant }}"
+          echo "wifi            : ${{ inputs.wifi }}"
           echo "tunnel          : ${{ inputs.tunnel }}"
           echo "remote          : ${{ inputs.remote }}"
           echo "container       : ${{ inputs.container }}"
@@ -192,6 +201,10 @@ jobs:
             "Minimal")  VARIANT="minimal" ;;
             "Standard") VARIANT="standard" ;;
           esac
+          case "${{ inputs.wifi }}" in
+            "Yes") WIFI="true" ;;
+            "No")  WIFI="false" ;;
+          esac
           case "${{ inputs.tunnel }}" in
             "All In One")               TUNNEL="all" ;;
             "OpenClash")                TUNNEL="openclash" ;;
@@ -234,6 +247,7 @@ jobs:
           echo "RELEASE_BRANCH=$RELEASE_BRANCH" >> $GITHUB_ENV
           echo "KERNEL=$KERNEL" >> $GITHUB_ENV
           echo "VARIANT=$VARIANT" >> $GITHUB_ENV
+          echo "WIFI=$WIFI" >> $GITHUB_ENV
           echo "TUNNEL=$TUNNEL" >> $GITHUB_ENV
           echo "REMOTE=$REMOTE" >> $GITHUB_ENV
           echo "CONTAINER=$CONTAINER" >> $GITHUB_ENV
@@ -361,7 +375,7 @@ jobs:
             fi
 
             # Build image
-            time ./make-image.sh ${{ env.PROFILE }} $tunnel ${{ env.VARIANT }} ${{ env.REMOTE }} ${{ env.CONTAINER }} ${{ env.ADDON }} ${{ env.USE_APK }}
+            time ./make-image.sh ${{ env.PROFILE }} $tunnel ${{ env.VARIANT }} ${{ env.REMOTE }} ${{ env.CONTAINER }} ${{ env.ADDON }} ${{ env.USE_APK }} ${{ env.WIFI }}
 
             # Move and rename output files
             for file in bin/targets/"${{ env.TARGET_SYSTEM }}"/*generic-rootfs.tar.gz; do

@@ -198,7 +198,7 @@ handle_wifi_packages() {
 
 # =====================================================================
 # Main build function
-#   $1 profile  $2 tunnel  $3 variant  $4 remote  $5 container  $6 addon  $7 use_apk
+#   $1 profile  $2 tunnel  $3 variant  $4 remote  $5 container  $6 addon  $7 use_apk  $8 enable_wifi
 # =====================================================================
 build_firmware() {
     local profile=$1
@@ -208,8 +208,9 @@ build_firmware() {
     local container=$5
     local addon=$6
     local use_apk=$7
+    local enable_wifi=$8
 
-    log "Starting build for profile: $profile (variant: ${variant:-standard}, apk: ${use_apk:-false})"
+    log "Starting build for profile: $profile (variant: ${variant:-standard}, apk: ${use_apk:-false}, wifi: ${enable_wifi:-false})"
 
     # Package list per variant + package manager
     if [ "$variant" == "minimal" ]; then
@@ -221,6 +222,10 @@ build_firmware() {
         else
             PACKAGES+="$PACKAGES_STD_OPKG"
         fi
+    fi
+
+    # WiFi applied to BOTH variants via build option (default on)
+    if [ "$enable_wifi" == "true" ]; then
         handle_wifi_packages
     fi
 
@@ -253,4 +258,4 @@ if [ -z "$1" ]; then
     error "Profile not specified"
 fi
 
-build_firmware "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+build_firmware "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8"
