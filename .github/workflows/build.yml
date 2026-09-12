@@ -366,7 +366,7 @@ jobs:
             time ./make-image.sh ${{ env.PROFILE }} $tunnel ${{ env.VARIANT }} ${{ env.REMOTE }} ${{ env.CONTAINER }} ${{ env.ADDON }}
 
             # Move and rename output files
-            for file in bin/targets/"${{ env.TARGET_SYSTEM }}"/*rootfs.tar.gz; do
+            for file in bin/targets/"${{ env.TARGET_SYSTEM }}"/*generic-rootfs.tar.gz; do
               if [ -f "$file" ]; then
                 new_name="BITS-WRT_$(basename "$file" .tar.gz)_${tunnel}.tar.gz"
                 mv "$file" compiled_images/$new_name
@@ -393,11 +393,11 @@ jobs:
             echo "Packaging images for: $tunnel"
 
             git clone --depth 1 https://github.com/ophub/amlogic-s9xxx-openwrt.git
-            mkdir -p amlogic-s9xxx-openwrt/openwrt-armvirt
+            mkdir -p amlogic-s9xxx-openwrt/openwrt-armsr
 
             for file in compiled_images/*_${tunnel}.tar.gz; do
               if [ -f "$file" ]; then
-                mv "$file" amlogic-s9xxx-openwrt/openwrt-armvirt/BITS-WRT_openwrt-armsr-armv8-generic-rootfs.tar.gz
+                mv "$file" amlogic-s9xxx-openwrt/openwrt-armsr/BITS-WRT_openwrt-armsr-armv8-generic-rootfs.tar.gz
                 cd amlogic-s9xxx-openwrt
                 sudo ./remake -b ${{ env.openwrt_board }} -k ${{ env.KERNEL }} -s 1024
 
