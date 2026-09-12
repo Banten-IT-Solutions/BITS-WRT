@@ -1,0 +1,33 @@
+#!/bin/bash
+# BITS-WRT override of ophub's openwrt-tf.
+# Original creates p3 (ROOTFS2) + p4 (SHARED) and leaves root small.
+# This version keeps a 2-partition layout: p1=BOOT (vfat), p2=ROOT (btrfs),
+# and grows p2 to fill the whole medium.
+#
+# Triggered on first boot by ophub's start_service.sh via /root/.todo_rootfs_resize.
+
+todo_rootfs_resize="/root/.todo_rootfs_resize"
+[[ -f "${todo_rootfs_resize}" && "$(tr -d '[:space:]' < "${todo_rootfs_resize}")" == "yes" ]] || exit 0
+
+error() {
+    echo "[ERROR] $1" >&2
+    exit 1
+}
+
+# Root is mounted btrfs on p2. Resolve the real device node.
+ROOT_DEV="$(awk '$2 == "/" && $3 == "btrfs" { print $1; exit }' /proc/mounts)"
+[[ -n "${ROOT_DEV}" ]] || error "unable to find root device in /proc/mounts"
+
+# /dev/mmcblk1p2 -> /dev/mmcblk1, 2
+DISK="$(printf '%s' "${ROOT_DEV}" | sed -E 's/p?[0-9]+$//')"
+PTNUM="$(printf '%s' "${ROOT_DEV}" | grep -oE '[0-9]+$')"
+[[ -n "${DISK}" && -n "${PTNUM}" && -e "${DISK}" ]] || error "unable to parse root device [${ROOT_DEV}]"
+
+sync
+parted -s "${DISK}" resizepart "${PTNUM}" 100% || error "parted resizepart ${PTNUM} 100% failed on ${DISK}"
+sleep 1
+
+btrfs filesystem resize max / || error "btrfs filesystem resize max failed"
+
+rm -f "${todo_rootfs_resize}"
+exit 0

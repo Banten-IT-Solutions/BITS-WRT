@@ -393,6 +393,10 @@ jobs:
             git clone --depth 1 https://github.com/ophub/amlogic-s9xxx-openwrt.git
             mkdir -p amlogic-s9xxx-openwrt/openwrt-armsr
 
+            # Override ophub openwrt-tf: grow root (p2) to full medium instead of creating p3/p4
+            cp scripts/openwrt-tf amlogic-s9xxx-openwrt/make-openwrt/openwrt-files/common-files/usr/sbin/openwrt-tf
+            chmod +x amlogic-s9xxx-openwrt/make-openwrt/openwrt-files/common-files/usr/sbin/openwrt-tf
+
             for file in compiled_images/*_${tunnel}.tar.gz; do
               if [ -f "$file" ]; then
                 mv "$file" amlogic-s9xxx-openwrt/openwrt-armsr/BITS-WRT_openwrt-armsr-armv8-generic-rootfs.tar.gz
