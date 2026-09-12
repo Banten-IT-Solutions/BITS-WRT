@@ -188,9 +188,10 @@ handle_addon() {
 }
 
 # =====================================================================
-# Amlogic-specific packages (standard)
+# WiFi + crypto (standard only). Board-agnostic: SoC (s905x etc) is
+# picked later by ophub `remake -b`; imagebuilder profile stays generic.
 # =====================================================================
-handle_profile_packages() {
+handle_wifi_packages() {
     PACKAGES+=" ath9k-htc-firmware hostapd hostapd-utils kmod-ath kmod-ath9k kmod-ath9k-common kmod-ath9k-htc kmod-cfg80211 kmod-crypto-acompress kmod-crypto-crc32c kmod-crypto-hash kmod-mac80211 wireless-tools wpa-cli wpa-supplicant"
     EXCLUDED+=" -procd-ujail"
 }
@@ -220,7 +221,7 @@ build_firmware() {
         else
             PACKAGES+="$PACKAGES_STD_OPKG"
         fi
-        handle_profile_packages "$profile"
+        handle_wifi_packages
     fi
 
     # attendedsysupgrade is a 25.x-only default; drop it for parity with 24.10
