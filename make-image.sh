@@ -213,6 +213,11 @@ build_firmware() {
         handle_profile_packages "$profile"
     fi
 
+    # attendedsysupgrade is a 25.x-only default; drop it for parity with 24.10
+    if [ "$use_apk" == "true" ]; then
+        EXCLUDED+=" -attendedsysupgrade-common -luci-app-attendedsysupgrade"
+    fi
+
     # Tunnel / remote / container / addon apply to both variants
     handle_tunnel_option "$tunnel_option"
     handle_remote "$remote"
