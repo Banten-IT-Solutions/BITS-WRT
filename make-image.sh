@@ -43,7 +43,7 @@ liblucihttp liblucihttp-lua libubus-lua lua luci-app-firewall luci-app-opkg \
 ca-bundle ca-certificates luci-compat coreutils-sleep coreutils-whoami file lolcat \
 luci-base luci-lib-base luci-lib-ip luci-lib-jsonc luci-lib-nixio luci-mod-admin-full \
 luci-mod-network luci-mod-status luci-mod-system luci-proto-ipv6 luci-proto-ppp \
-luci-theme-bootstrap px5g-wolfssl rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci \
+luci-theme-bootstrap rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci \
 rpcd-mod-rrdns uhttpd uhttpd-mod-ubus coreutils coreutils-base64 coreutils-nohup coreutils-stty libc coreutils-stat \
 ip-full libuci-lua microsocks resolveip ipset iptables iptables-legacy \
 iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat luci-lua-runtime zoneinfo-asia zoneinfo-core \
@@ -172,8 +172,8 @@ set_minimal_packages() {
 PACKAGES+=" -dnsmasq -procd-ujail dnsmasq-full \
 luci luci-ssl luci-compat luci-lua-runtime \
 rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci rpcd-mod-rrdns \
-uhttpd uhttpd-mod-ubus px5g-wolfssl cgi-io \
-bash jq nano ttyd luci-app-ttyd luci-app-ramfree \
+uhttpd uhttpd-mod-ubus cgi-io \
+bash jq nano ttyd luci-app-ttyd \
 luci-theme-bits luci-theme-bootstrap \
 kmod-tun kmod-inet-diag \
 kmod-nft-tproxy kmod-nft-socket kmod-dummy \
