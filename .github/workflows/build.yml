@@ -18,11 +18,11 @@ on:
       openwrt_version:
         description: "Select OpenWrt Version"
         required: true
-        default: "OpenWrt 23.05 (opkg)"
+        default: "OpenWrt 24.10 (opkg)"
         type: choice
         options:
           - OpenWrt 23.05 (opkg)
-          - OpenWrt 24.10 (apk)
+          - OpenWrt 24.10 (opkg)
           - OpenWrt 25.12 (apk)
       openwrt_kernel:
         description: "Select Kernel Version"
@@ -183,7 +183,7 @@ jobs:
           esac
           case "${{ inputs.openwrt_version }}" in
             "OpenWrt 23.05 (opkg)") RELEASE_BRANCH="openwrt:23.05.5" ;;
-            "OpenWrt 24.10 (apk)")  RELEASE_BRANCH="openwrt:24.10.8" ;;
+            "OpenWrt 24.10 (opkg)") RELEASE_BRANCH="openwrt:24.10.8" ;;
             "OpenWrt 25.12 (apk)")  RELEASE_BRANCH="openwrt:25.12.5" ;;
           esac
           case "${{ inputs.openwrt_kernel }}" in
@@ -259,9 +259,9 @@ jobs:
           echo "VEROP=$VEROP" >> $GITHUB_ENV
           echo "DOWNLOAD_BASE=https://downloads.${BASE}.org" >> $GITHUB_ENV
 
-          # Package manager: apk for OpenWrt >= 24.10, opkg otherwise
+          # Package manager: apk for OpenWrt 25.x+, opkg for 23.05/24.10
           MAJOR="$(echo "${BRANCH}" | cut -d'.' -f1)"
-          if [ "${MAJOR}" -ge 24 ]; then USE_APK="true"; PKG_EXT="apk"; else USE_APK="false"; PKG_EXT="ipk"; fi
+          if [ "${MAJOR}" -ge 25 ]; then USE_APK="true"; PKG_EXT="apk"; else USE_APK="false"; PKG_EXT="ipk"; fi
           echo "USE_APK=${USE_APK}" >> $GITHUB_ENV
           echo "PKG_EXT=${PKG_EXT}" >> $GITHUB_ENV
 
