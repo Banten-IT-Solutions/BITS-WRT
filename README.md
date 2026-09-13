@@ -31,7 +31,7 @@
 | **Monitoring & BOT**       | Bandix (limit kecepatan) dan BITS Networks Bot (kontrol via Telegram).                                               |
 | **Extra Modem**            | Dukungan modem 4G/LTE USB — `usb-modeswitch`, `comgt`/`uqmi`/`umbim`, protokol NCM/QMI/MBIM.                         |
 | **WiFi**                   | Driver `ath9k` (Atheros USB) dan `brcmfmac` (BCM43438 SDIO) — opsional per build.                                    |
-| **BITS Theme**             | Tema LuCI hijau modern `luci-theme-bits` + banner + sysinfo.                                                         |
+| **BITS Theme**             | Tema LuCI modern `luci-theme-bits` — aksen biru langit + cyan, mode gelap oranye, banner SSH + sysinfo.              |
 | **File Manager**           | `luci-app-bitsfilemanager` untuk kelola file dari web UI.                                                            |
 | **Terminal**               | `ttyd` web terminal + `luci-app-ttyd`.                                                                               |
 | **Huawei HiLink**          | `luci-app-huawei-hilink` untuk modem Huawei HiLink.                                                                  |
