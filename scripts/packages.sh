@@ -29,6 +29,7 @@ verify_packages() {
 
     for package in "${package_list[@]}"; do
         local pkg_name="${package%%|*}"
+        pkg_name="${pkg_name%%.*}"   # strip .* arch filter — check existence by base name
         if ! grep -qEi "$pkg_name" <<< "$package_files"; then
             failed_packages+=("$pkg_name")
         fi
