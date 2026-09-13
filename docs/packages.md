@@ -74,7 +74,7 @@ standard = BASE + STD + STD_OPKG/APK + opsi
 | Sumber | Paket |
 |--------|-------|
 | Feed resmi OpenWrt | mayoritas BASE/STD |
-| Feed `bits` (BITS-WRT-Packages) | `luci-theme-bits luci-app-bitsfilemanager luci-app-bitshilink luci-app-bitstailscale bitsxl luci-app-bitsxl bitsnetworksbot luci-app-bitsnetworksbot` |
+| Feed `bits` (BITS-WRT-Packages) | `luci-theme-bits luci-app-bitsfilemanager luci-app-bitshilink luci-app-bitstailscale bitsxl luci-app-bitsxl bitsnetworksbot luci-app-bitsnetworksbot bandix luci-app-bandix` |
 | Feed `momo` | `momo luci-app-momo` |
 | Feed `nikki` | `nikki luci-app-nikki` |
-| GitHub release (`scripts/packages.sh`) | `bandix luci-app-bandix luci-app-openclash` |
+| GitHub release (`scripts/packages.sh`) | `luci-app-openclash` |
