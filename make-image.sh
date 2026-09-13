@@ -66,7 +66,7 @@ kmod-usb-net-rtl8150 kmod-usb-net-rtl8152 kmod-usb-net-asix kmod-usb-net-asix-ax
 kmod-mii kmod-usb-net kmod-usb-ohci kmod-usb-uhci kmod-usb2 kmod-usb-ehci kmod-nls-utf8 \
 kmod-phy-broadcom kmod-phylib-broadcom kmod-tg3 \
 kmod-usb-storage-uas ntfs-3g \
-luci-app-tinyfm luci-app-engsel"
+luci-app-fileassistant luci-app-engsel"
 
 # =====================================================================
 # STANDARD extras, split per package manager (maintenance point)
