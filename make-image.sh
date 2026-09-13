@@ -44,7 +44,7 @@ rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci rpcd-mod-rrdns \
 uhttpd uhttpd-mod-ubus cgi-io \
 luci-theme-bits luci-theme-bootstrap \
 bash jq nano curl wget-ssl ca-bundle ca-certificates ip-full \
-ttyd luci-app-ttyd \
+ttyd luci-app-ttyd luci-app-huawei-hilink \
 parted fdisk lsblk btrfs-progs kmod-fs-btrfs \
 kmod-tun kmod-inet-diag \
 kmod-nft-tproxy kmod-nft-socket kmod-dummy \
