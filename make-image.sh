@@ -72,12 +72,12 @@ luci-app-bitsfilemanager bitsxl luci-app-bitsxl"
 # STANDARD extras, split per package manager (name differs opkg vs apk)
 #   libusb ABI suffix: opkg (24.10) = libusb-1.0-0, apk (25.12) = libusb-1.0
 # =====================================================================
-PACKAGES_STD_OPKG="libusb-1.0-0"
-PACKAGES_STD_APK="libusb-1.0"
+PACKAGES_STD_OPKG=" libusb-1.0-0"
+PACKAGES_STD_APK=" libusb-1.0"
 
 # f2fs lib also differs: opkg = libf2fs6, apk = libf2fs (used by minimal exclude)
-PACKAGES_EXCLUDE_F2FS_OPKG="-libf2fs6"
-PACKAGES_EXCLUDE_F2FS_APK="-libf2fs"
+PACKAGES_EXCLUDE_F2FS_OPKG=" -libf2fs6"
+PACKAGES_EXCLUDE_F2FS_APK=" -libf2fs"
 
 # =====================================================================
 # MINIMAL — strip default bloat. Only applied to variant "minimal";
