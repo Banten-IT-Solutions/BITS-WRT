@@ -20,7 +20,7 @@ Catatan perubahan signifikan untuk BITS-WRT builder.
 
 ### Packages & Feeds
 - Custom feeds: `bits`, `momo`, `nikki`.
-- `luci-theme-bits`, `luci-app-bitsfilemanager`, `luci-app-engsel`.
+- `luci-theme-bits`, `luci-app-bitsfilemanager`, `luci-app-bitsxl`.
 
 ### Default (first boot)
 - IP `20.20.20.20` · user `root` · pass `bitswrt` · hostname `BITS-WRT`.

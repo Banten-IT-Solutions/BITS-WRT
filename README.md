@@ -34,6 +34,7 @@
 | **WiFi**                   | Driver `ath9k` (Atheros USB) dan `brcmfmac` (BCM43438 SDIO) — opsional per build.                                    |
 | **BITS Theme**             | Tema LuCI modern `luci-theme-bits` — aksen biru langit + cyan, mode gelap oranye, banner SSH + sysinfo.              |
 | **File Manager**           | `luci-app-bitsfilemanager` untuk kelola file dari web UI.                                                            |
+| **Quota Management**       | `luci-app-bitsxl` — kelola akun, kuota, store & pembayaran XL (myXL).                                              |
 | **Terminal**               | `ttyd` web terminal + `luci-app-ttyd`.                                                                               |
 | **Huawei HiLink**          | `luci-app-bitshilink` untuk modem Huawei HiLink.                                                                  |
 | **Storage**                | `parted` + `btrfs-progs` + `zram-swap` + partisi root tumbuh otomatis.                                               |

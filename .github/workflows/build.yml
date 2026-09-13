@@ -473,6 +473,8 @@ jobs:
 
           echo "Images packaged successfully"
           echo "status=success" >> $GITHUB_OUTPUT
+          TITLE="$(find compiled_images -maxdepth 1 -name '*.img.xz' -printf '%f\n' | sed 's/\.img\.xz$//' | sort | head -n 1)"
+          echo "release_title=$TITLE" >> "$GITHUB_OUTPUT"
           ls -la compiled_images/
 
       - name: 💾 Modify SD Card
@@ -508,7 +510,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: "bitswrt-amlogic-${{ env.BRANCH }}-${{ env.TUNNEL }}-${{ env.DATE }}-${{ github.run_number }}"
-          name: BITS-WRT-Amlogic-${{ env.BRANCH }}-${{ env.TUNNEL }}-${{ env.DATE }}
+          name: ${{ steps.package.outputs.release_title }}
           files: ${{ env.WORKING_DIR }}/compiled_images/*.xz
           prerelease: true
           body: |

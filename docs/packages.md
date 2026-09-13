@@ -36,7 +36,8 @@ standard = BASE + STD + STD_OPKG/APK + opsi
 - Perl lengkap (`perl` + semua `perlbase-*`)
 - Driver NIC USB: `kmod-usb-net-rtl8150 kmod-usb-net-rtl8152 kmod-usb-net-asix kmod-usb-net-asix-ax88179`, `kmod-phy-broadcom kmod-phylib-broadcom kmod-tg3`
 - Storage: `kmod-usb-storage-uas ntfs-3g`
-- File manager: `luci-app-bitsfilemanager luci-app-engsel`
+- File manager: `luci-app-bitsfilemanager`
+- Quota Management (myXL): `bitsxl luci-app-bitsxl`
 
 ### Minimal (`variant=minimal`) — `PACKAGES_EXCLUDE_MINIMAL`
 
@@ -73,7 +74,7 @@ standard = BASE + STD + STD_OPKG/APK + opsi
 | Sumber | Paket |
 |--------|-------|
 | Feed resmi OpenWrt | mayoritas BASE/STD |
-| Feed `bits` (BITS-WRT-Packages) | `luci-theme-bits luci-app-bitsfilemanager luci-app-bitshilink luci-app-bitstailscale bitsnetworksbot luci-app-bitsnetworksbot` |
+| Feed `bits` (BITS-WRT-Packages) | `luci-theme-bits luci-app-bitsfilemanager luci-app-bitshilink luci-app-bitstailscale bitsxl luci-app-bitsxl bitsnetworksbot luci-app-bitsnetworksbot` |
 | Feed `momo` | `momo luci-app-momo` |
 | Feed `nikki` | `nikki luci-app-nikki` |
-| GitHub release (`scripts/packages.sh`) | `bandix luci-app-bandix luci-app-openclash luci-app-engsel` |
+| GitHub release (`scripts/packages.sh`) | `bandix luci-app-bandix luci-app-openclash` |

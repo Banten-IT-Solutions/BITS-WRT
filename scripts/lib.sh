@@ -240,12 +240,7 @@ download_packages() {
                 
                 # Find matching file (match basename, not full URL, so the repo
                 # name embedded in the URL does not false-positive)
-                local ext_re
-                if [ "$mode" == "zip" ]; then
-                    ext_re="\.${PKG_EXT:-ipk}\.zip$"
-                else
-                    ext_re="\.${PKG_EXT:-ipk}$"
-                fi
+                local ext_re="\.${PKG_EXT:-ipk}$"
 
                 local download_url
                 download_url=$(
@@ -265,12 +260,6 @@ download_packages() {
                 local output_file
                 output_file="$download_dir/$(basename "$download_url")"
                 download_file "$download_url" "$output_file" || log "ERROR" "Failed to download $filename"
-
-                # zip-packed releases (e.g. engsel): extract .ipk/.apk into packages/
-                if [ "$mode" == "zip" ]; then
-                    unzip -oq "$output_file" -d "$download_dir" && rm -f "$output_file" \
-                        || log "ERROR" "Failed to extract $filename"
-                fi
             done
 ;;
             
