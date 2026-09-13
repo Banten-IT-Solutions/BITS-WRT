@@ -39,22 +39,6 @@ on:
         options:
           - Minimal
           - Standard
-      wifi:
-        description: "Enable WiFi"
-        required: true
-        default: "Yes"
-        type: choice
-        options:
-          - "Yes"
-          - "No"
-      modem:
-        description: "Support Extra Modem (4G/LTE USB)"
-        required: true
-        default: "No"
-        type: choice
-        options:
-          - "Yes"
-          - "No"
       tunnel:
         description: "Select VPN Client"
         required: true
@@ -89,7 +73,7 @@ on:
           - No Runtime
           - Docker
           - Podman
-      addon:
+      monitoring:
         description: "Select Monitoring Tools"
         required: true
         default: "No Monitoring"
@@ -99,6 +83,22 @@ on:
           - Bandix
           - BITS Bot
           - Bandix + BITS Bot
+      wifi:
+        description: "Enable WiFi"
+        required: true
+        default: "Yes"
+        type: choice
+        options:
+          - "Yes"
+          - "No"
+      modem:
+        description: "Extra Modem"
+        required: true
+        default: "No"
+        type: choice
+        options:
+          - "Yes"
+          - "No"
       mod_sdcard:
         description: "Select Mod SD Card"
         required: true
@@ -150,7 +150,7 @@ jobs:
           echo "tunnel          : ${{ inputs.tunnel }}"
           echo "remote          : ${{ inputs.remote }}"
           echo "container       : ${{ inputs.container }}"
-          echo "addon           : ${{ inputs.addon }}"
+          echo "monitoring      : ${{ inputs.monitoring }}"
           echo "mod_sdcard      : ${{ inputs.mod_sdcard }}"
           echo "clean           : ${{ inputs.clean }}"
           echo "::endgroup::"
@@ -240,7 +240,7 @@ jobs:
             "Docker")     CONTAINER="docker" ;;
             "Podman")     CONTAINER="podman" ;;
           esac
-          case "${{ inputs.addon }}" in
+          case "${{ inputs.monitoring }}" in
             "No Monitoring")     ADDON="no" ;;
             "Bandix")            ADDON="bandix" ;;
             "BITS Bot")          ADDON="bot" ;;
