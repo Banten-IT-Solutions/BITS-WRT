@@ -127,6 +127,8 @@ Build dilakukan via GitHub Actions (`workflow_dispatch`). Opsi build:
 
 Output: `BITS-WRT_<versi>_<board>_k<kernel>_<fitur>_<variant>.img.xz` sebagai pre-release.
 
+> Detail paket per opsi: [docs/packages.md](docs/packages.md).
+
 ---
 
 <div align="center">
