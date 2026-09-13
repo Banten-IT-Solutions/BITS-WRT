@@ -44,7 +44,6 @@
 **Changelog Firmware** (07-02-2025)
 
 - OPHUB Add Kernel 6.x.x
-- Add Source Packages By openwrt.ai
 - Use Deafult Font Terminal
 - Add AdGuard Home
 
@@ -90,7 +89,6 @@
 - Add Theme Alpha
 - Add Repack s905x By Ophub
 - Fixed Terminal
-- Add Source Packages By kiddin9
 
 **Changelog Firmware** (19-01-2025)
 
