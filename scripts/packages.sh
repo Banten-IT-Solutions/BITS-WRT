@@ -9,6 +9,7 @@ declare -a packages_github=(
     "luci-app-openclash|https://api.github.com/repos/vernesong/OpenClash/releases/latest"
     "luci-app-tinyfm|https://api.github.com/repos/Maizil41/luci-app-tinyfm/releases/latest"
     "luci-app-huawei-hilink|https://api.github.com/repos/Maizil41/Huawei-HiLink/releases/latest"
+    "luci-app-engsel-aarch64_generic|https://api.github.com/repos/tsaQB/luci-app-engsel/releases/latest|zip"
 )
 
 # Verify downloaded packages exist
