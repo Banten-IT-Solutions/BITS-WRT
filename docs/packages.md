@@ -19,7 +19,7 @@ standard = BASE + STD + STD_OPKG/APK + opsi
 | RPC/web | `rpcd rpcd-mod-file rpcd-mod-iwinfo rpcd-mod-luci rpcd-mod-rrdns`, `uhttpd uhttpd-mod-ubus cgi-io` |
 | Tema | `luci-theme-bits luci-theme-bootstrap` |
 | Tools dasar | `bash jq nano curl wget-ssl ca-bundle ca-certificates ip-full` |
-| Terminal/Mikrotil | `ttyd luci-app-ttyd luci-app-huawei-hilink` |
+| Terminal/Mikrotil | `ttyd luci-app-ttyd luci-app-bitshilink` |
 | Partisi/resize | `parted fdisk lsblk btrfs-progs kmod-fs-btrfs` |
 | Tunnel kmod | `kmod-tun kmod-inet-diag kmod-nft-tproxy kmod-nft-socket kmod-dummy` |
 | USB tether | `kmod-usb-net-cdc-ether kmod-usb-net-cdc-ncm kmod-usb-net-rndis`, `kmod-usb-storage usbutils usb-modeswitch` |
@@ -54,7 +54,7 @@ standard = BASE + STD + STD_OPKG/APK + opsi
 | **Tunnel** | `openclash` | `coreutils-nohup bash dnsmasq-full curl ca-certificates ipset iptables-nft ip-full libcap libcap-bin ruby ruby-yaml kmod-tun kmod-inet-diag unzip kmod-nft-tproxy luci-compat luci luci-base luci-app-openclash` + core `clash_meta` (mihomo, dari MetaCubeX via `tunnel.sh`) |
 | | `nikki` | `nikki luci-app-nikki` |
 | | `momo` | `momo luci-app-momo` |
-| **Remote** | `tailscale` | `tailscale luci-app-tailscale` |
+| **Remote** | `tailscale` | `tailscale luci-app-bitstailscale` |
 | | `cloudflare` | `cloudflared luci-app-cloudflared` |
 | **Container** | `docker` | `dockerd docker luci-app-dockerman` |
 | | `podman` | `podman` |
@@ -73,7 +73,7 @@ standard = BASE + STD + STD_OPKG/APK + opsi
 | Sumber | Paket |
 |--------|-------|
 | Feed resmi OpenWrt | mayoritas BASE/STD |
-| Feed `bits` (BITS-WRT-Packages) | `luci-theme-bits luci-app-bitsfilemanager bitsnetworksbot luci-app-bitsnetworksbot` |
+| Feed `bits` (BITS-WRT-Packages) | `luci-theme-bits luci-app-bitsfilemanager luci-app-bitshilink luci-app-bitstailscale bitsnetworksbot luci-app-bitsnetworksbot` |
 | Feed `momo` | `momo luci-app-momo` |
 | Feed `nikki` | `nikki luci-app-nikki` |
-| GitHub release (`scripts/packages.sh`) | `bandix luci-app-bandix luci-app-openclash luci-app-huawei-hilink luci-app-engsel` |
+| GitHub release (`scripts/packages.sh`) | `bandix luci-app-bandix luci-app-openclash luci-app-engsel` |
