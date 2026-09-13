@@ -197,15 +197,8 @@ handle_addon() {
 # SoC (s905x etc) is picked later by ophub `remake -b`; profile stays generic.
 # =====================================================================
 handle_wifi_packages() {
-    local use_apk=$1
-
     PACKAGES+=" ath9k-htc-firmware hostapd hostapd-utils iw kmod-ath kmod-ath9k kmod-ath9k-common kmod-ath9k-htc kmod-cfg80211 kmod-crypto-acompress kmod-crypto-crc32c kmod-crypto-hash kmod-mac80211 wireless-tools wpa-cli wpa-supplicant"
-    PACKAGES+=" kmod-brcmfmac brcmfmac-nvram-43430-sdio"
-    if [ "$use_apk" == "true" ]; then
-        PACKAGES+=" brcmfmac-firmware-43430-sdio"
-    else
-        PACKAGES+=" brcmfmac-firmware-43430a0-sdio"
-    fi
+    PACKAGES+=" kmod-brcmfmac brcmfmac-nvram-43430-sdio brcmfmac-firmware-43430a0-sdio"
     EXCLUDED+=" -procd-ujail"
 }
 
@@ -254,7 +247,7 @@ build_firmware() {
 
     # WiFi applied to BOTH variants via build option (default on)
     if [ "$enable_wifi" == "true" ]; then
-        handle_wifi_packages "$use_apk"
+        handle_wifi_packages
     fi
 
     # Extra modem support applied to BOTH variants (default off)

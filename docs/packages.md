@@ -60,7 +60,7 @@ standard = BASE + STD + STD_OPKG/APK + opsi
 | | `podman` | `podman` |
 | **Monitoring** | `bandix` | `bandix luci-app-bandix` |
 | | `bot` | `bitsnetworksbot luci-app-bitsnetworksbot` |
-| **WiFi** | `yes` | `ath9k-htc-firmware hostapd hostapd-utils iw kmod-ath kmod-ath9k kmod-ath9k-common kmod-ath9k-htc kmod-cfg80211 kmod-crypto-* kmod-mac80211 wireless-tools wpa-cli wpa-supplicant` + `kmod-brcmfmac brcmfmac-nvram-43430-sdio` + firmware BCM43438 (nama beda apk vs opkg) + buang `-procd-ujail` |
+| **WiFi** | `yes` | `ath9k-htc-firmware hostapd hostapd-utils iw kmod-ath kmod-ath9k kmod-ath9k-common kmod-ath9k-htc kmod-cfg80211 kmod-crypto-* kmod-mac80211 wireless-tools wpa-cli wpa-supplicant` + `kmod-brcmfmac brcmfmac-nvram-43430-sdio brcmfmac-firmware-43430a0-sdio` + buang `-procd-ujail` |
 | **Extra Modem** | `yes` | `comgt comgt-ncm uqmi umbim luci-proto-3g luci-proto-ncm luci-proto-qmi kmod-usb-net-qmi-wwan kmod-usb-net-cdc-mbim kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-wwan kmod-usb-acm` |
 
 ## 4. Otomatis (bukan opsi user)
