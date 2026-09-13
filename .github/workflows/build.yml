@@ -18,7 +18,7 @@ on:
       openwrt_version:
         description: "Select OpenWrt Version"
         required: true
-        default: "OpenWrt 24.10"
+        default: "OpenWrt 25.12"
         type: choice
         options:
           - OpenWrt 24.10
@@ -26,7 +26,7 @@ on:
       openwrt_kernel:
         description: "Select Kernel Version"
         required: false
-        default: "Kernel 6.6"
+        default: "Kernel 6.12"
         type: choice
         options:
           - Kernel 6.6
@@ -34,7 +34,7 @@ on:
       variant:
         description: "Select Build Variant"
         required: true
-        default: "Standard"
+        default: "Minimal"
         type: choice
         options:
           - Minimal
@@ -67,7 +67,7 @@ on:
       container:
         description: "Select Container Runtime"
         required: true
-        default: "No Runtime"
+        default: "Docker"
         type: choice
         options:
           - No Runtime
@@ -76,7 +76,7 @@ on:
       monitoring:
         description: "Select Monitoring Tools"
         required: true
-        default: "No Monitoring"
+        default: "Bandix + BITS Bot"
         type: choice
         options:
           - No Monitoring
@@ -86,7 +86,7 @@ on:
       wifi:
         description: "Enable WiFi"
         required: true
-        default: "Yes"
+        default: "No"
         type: choice
         options:
           - "Yes"
