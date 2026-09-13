@@ -1,121 +1,142 @@
-<h1 align="center">
-  <img src="/pictures/logo.png" alt="OpenWrt" width="100">
-  <br><strong style="font-size: 2rem; color:rgb(22, 170, 238);">RTA WRT - Custom OpenWrt</strong><br>
-</h1>
-
-<h3 align="center" style="font-weight: normal;">OpenWrt - 24.10.0</h3>
-
-<h4 align="center" style="font-size: 1.2rem; font-weight: 400;">Bergabunglah di Telegram untuk mendapatkan notifikasi update dan tutorial!</h4>
-<p align="center">
-  <a href="https://t.me/bantenitsolutions">
-    <img src="https://img.shields.io/badge/Telegram-Channel-%23059dfa?style=for-the-badge&logo=Telegram" alt="Telegram Channel">
-  </a>
-  <a href="https://t.me/bantenitsolution">
-    <img src="https://img.shields.io/badge/Telegram-Group-%23059dfa?style=for-the-badge&logo=Telegram" alt="Telegram Group">
-  </a>
-  <a href="https://t.me/bitscoid">
-    <img src="https://img.shields.io/badge/Telegram-Personal-%23059dfa?style=for-the-badge&logo=Telegram" alt="Telegram Personal">
-  </a>
-</p>
-
-<p align="center" style="font-size: 1.1rem;">
-  <strong>Build dengan ImageBuilder | Custom Script by FriWrt</strong>
-</p>
+<div align="center">
+  <h1>BITS WRT</h1>
+  <p>
+    <a href="https://bits.co.id">
+      <img src="https://img.shields.io/badge/Banten%20IT%20Solutions-BITS%20WRT-00C853?style=for-the-badge&logo=openwrt&logoColor=white" alt="BITS WRT" />
+    </a>
+  </p>
+  <p>
+    Custom OpenWrt firmware (BITS-WRT) for Amlogic devices &mdash; built with ImageBuilder and packed with tunneling, remote access, and a modern BITS LuCI theme.
+  </p>
+  <br>
+  <p>
+    <img src="https://img.shields.io/badge/OpenWrt-00A1E9?style=flat&logo=openwrt&logoColor=white" alt="OpenWrt" />
+    <img src="https://img.shields.io/badge/LuCI-3D5780?style=flat" alt="LuCI" />
+    <img src="https://img.shields.io/badge/Shell-4EAA25?style=flat&logo=gnu-bash&logoColor=white" alt="Shell" />
+    <img src="https://img.shields.io/badge/Amlogic-ED1C24?style=flat" alt="Amlogic" />
+    <img src="https://img.shields.io/badge/ARM64-0091BD?style=flat" alt="ARM64" />
+    <img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat&logo=githubactions&logoColor=white" alt="GitHub Actions" />
+  </p>
+</div>
 
 ---
 
-## 🚀 Link Download
+## ✨ Features
 
-<p align="center">
-  <a href="https://github.com/Banten-IT-Solutions/BITS-WRT/releases/">
-    <img src="https://img.shields.io/badge/Download-OpenWrt-%231aa5de?style=for-the-badge&logo=OpenWrt" alt="Download OpenWrt">
-  </a>
-</p>
+| Feature                    | Description                                                                                                          |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Tunneling**              | OpenClash (MetaCubeX Mihomo), Nikki (Mihomo), dan Momo (sing-box) — kombinasi bebas.                                 |
+| **Remote Access**          | Tailscale (mesh VPN) dan Cloudflare (cloudflared tunnel).                                                            |
+| **Container Runtime**      | Docker (Dockerman) atau Podman.                                                                                      |
+| **Monitoring & BOT**       | Bandix (limit kecepatan) dan BITS Networks Bot (kontrol via Telegram).                                               |
+| **Extra Modem**            | Dukungan modem 4G/LTE USB — `usb-modeswitch`, `comgt`/`uqmi`/`umbim`, protokol NCM/QMI/MBIM.                         |
+| **WiFi**                   | Driver `ath9k` (Atheros USB) dan `brcmfmac` (BCM43438 SDIO) — opsional per build.                                    |
+| **BITS Theme**             | Tema LuCI hijau modern `luci-theme-bits` + banner + sysinfo.                                                         |
+| **File Manager**           | `luci-app-bitsfilemanager` untuk kelola file dari web UI.                                                            |
+| **Terminal**               | `ttyd` web terminal + `luci-app-ttyd`.                                                                               |
+| **Huawei HiLink**          | `luci-app-huawei-hilink` untuk modem Huawei HiLink.                                                                  |
+| **Storage**                | `parted` + `btrfs-progs` + `zram-swap` + partisi root tumbuh otomatis.                                               |
 
-### 📄 Lisensi & Sumber
+## 🛠️ Tech Stack
 
-<ul style="font-size: 1rem;">
-  <li><a href="https://github.com/rtaserver/RTA-WRT/blob/main/LICENSE" target="_blank">Apache License 2.0</a></li>
-  <li><a href="https://github.com/frizkyiman/friWrt-MyWrtBuilder" target="_blank">friWrt-MyWrtBuilder by frizkyiman</a></li>
-  <li><a href="https://github.com/Revincx/MyWrtBuilder" target="_blank">MyWrtBuilder by Revincx</a></li>
-  <li><a href="https://github.com/armarchindo/ULO-Builder" target="_blank">ULO-Builder by DBAI</a></li>
-</ul>
-
----
-
-## ⚠️ Peringatan untuk Instalasi Pertama
-
-> **Catatan:** Booting awal memerlukan waktu agak lama karena proses partisi ulang dan konfigurasi tambahan.
-
----
-
-## 📱 Device yang Didukung
-
-### Amlogic
-
-- **s905x** (HG680P, B860Hv1/v2) | Mod Boot SDCARD
-- **s905x2** (HG680FJ, B860Hv5, MNC CYBORG001, X96Max-4G, X96Max-2G, MECOOL-KM3-4G, Tanix-Tx5-Max, A95X-F2)
-- **s905x3** (X96-Max+, HK1-Box, Vontar-X3, H96-Max-X3, Ugoos-X3, TX3(QZ), TX3(BZ), X96-Air, X96-Max+\_A100, A95X-F3-Air, Tencent-Aurora-3Pro(s905x3-b), X96-Max+Q1, X96-Max+100W, X96-Max+\_2101, Infinity-B32, Whale, X88-Pro-X3, X99-Max-Plus, Transpeed-X3-Plus)
-- **s905x4** (AKARI AX810, dll)
-- **s912** (Tanix-TX8-Max, Tanix-TX9-Pro(3G), Tanix-TX9-Pro(2G), Tanix-TX92, Nexbox-A1, Nexbox-A95X-A2, A95X, H96-Pro-Plus, VORKE-Z6-Plus, Mecool-M8S-PRO-L, Vontar-X92, T95Z-Plus, Octopus-Planet, Phicomm-T1, TX3-Mini, OneCloudPro-V1.1_V1.2)
-
-### Allwinner
-
-- **H5** (Orange Pi Zero Plus 2, Orange Pi Zero Plus, Orange Pi Prime, Orange Pi PC2)
-- **H6** (Orange Pi 1 Plus, Orange Pi Lite 2, Orange Pi 3 LTS, Orange Pi 3)
-- **H616** (Orange Pi Zero 2)
-- **H618** (Orange Pi Zero 3, Orange Pi Zero 2W)
-
-### Rockchip
-
-- **RK3566** (Orange Pi 3B)
-- **RK3588S** (Orange Pi 5)
-- **RK3588** (Orange Pi 5 Plus)
-
-### Broadcom
-
-- **BCM2710** (Raspberry Pi 3A+/3B/3B+/CM3/Zero2/Zero2W - 64bit)
-- **BCM2711** (Raspberry Pi 4B/400/CM4 - 64bit)
-
-### Generic
-
-- **x86-64**
+| Layer        | Technology                                                              |
+| ------------ | ------------------------------------------------------------------------ |
+| **Base**     | OpenWrt 24.10 / 25.12 (ImageBuilder)                                     |
+| **Repack**   | [ophub/amlogic-s9xxx-openwrt](https://github.com/ophub/amlogic-s9xxx-openwrt) `remake` |
+| **Package Mgr** | `opkg` (24.10) / `apk` (25.12+)                                      |
+| **Theme**    | `luci-theme-bits` (luci-static/bits)                                     |
+| **CI/CD**    | GitHub Actions (`workflow_dispatch`)                                     |
 
 ---
 
-## ℹ️ Informasi Sistem
+## 📁 Project Structure
 
-- **IP Default:** 192.168.1.1
-- **Username:** root
-- **Password:** bitswrt
-- **SSID:** BITS-WRT_2g / BITS-WRT_5g
-
-### ⭐ Fitur Utama
-
-<ul style="font-size: 1rem;">
-  <li>Modemmanager dengan koneksi ulang otomatis</li>
-  <li>OpenClash dengan MetaCubeX Mihomo terbaru</li>
-  <li>Passwall *Tunneling* alternatif</li>
-  <li>MihomoTProxy *Tunneling* alternatif</li>
-  <li>TinyFm file manager</li>
-  <li>Internet Detector dan Lite Watchdog</li>
-  <li>Tema Argon & Material dengan tampilan login kustom</li>
-  <li>3ginfo lite, Modeminfo, sms-tool, dan aplikasi modem lainnya</li>
-  <li>Dukungan Layar OLED (teruji di Raspberry Pi 4B)</li>
-</ul>
+```text
+BITS-WRT/
+├── .github/
+│   ├── workflows/
+│   │   ├── build.yml             # build firmware (workflow_dispatch) + release .img.xz
+│   │   └── cleanup.yml           # stale issue/PR + delete workflow runs
+│   └── ISSUE_TEMPLATE/           # bug / feature / config / firmware
+├── files/                        # custom FILES di-inject ke gambar
+│   └── etc/
+│       ├── config/               # system, network, dhcp, firewall, luci,
+│       │                         # momo, nikki, openclash, ttyd, fstab, dropbear
+│       ├── momo/profiles/        # BITS.json (profil sing-box momo)
+│       ├── nikki/profiles/       # BITS.yaml (profil mihomo nikki)
+│       ├── crontabs/root         # cron default
+│       ├── sysctl.conf
+│       ├── rc.local
+│       └── uci-defaults/99-init-settings.sh   # first-boot setup (passwd, repo, tunnel)
+├── scripts/
+│   ├── packages.sh               # download paket eksternal
+│   ├── patch.sh                  # patch tema & brand
+│   ├── tunnel.sh                 # konfigurasi tunnel (openclash/nikki/momo)
+│   ├── modsdcard.sh              # mod SD card (Amlogic)
+│   ├── openwrt-tf                # partisi root tumbuh ke medium penuh
+│   ├── lib.sh
+│   └── boot/                     # u-boot.bin + aml_autoscript
+├── make-image.sh                 # entrypoint build (base/standard/minimal + opsi)
+└── CHANGELOG.md
+```
 
 ---
 
-## 🖼️ Pratinjau
+## 🚀 Quick Start
 
-### 🔑 Tampilan Masuk
+### Download
 
-<p align="center">
-  <img src="/pictures/Login.png" alt="Tampilan Masuk" width="80%">
-</p>
+Ambil firmware dari [Releases](https://github.com/Banten-IT-Solutions/BITS-WRT/releases) — file `.img.xz` (Amlogic).
 
-### 🗂️ Tampilan Utama
+### Flash (Amlogic)
 
-<p align="center">
-  <img src="/pictures/Dashboard.png" alt="Tampilan Utama" width="80%">
-</p>
+1. Ekstrak `.img.xz` → `.img`.
+2. Tulis ke SD card / USB dengan [balenaEtcher](https://www.balena.io/etcher/) atau `dd`.
+3. Colok ke box, boot dari SD card / USB.
+
+> Build dengan opsi `mod_sdcard` menambahkan `u-boot.bin` + `aml_autoscript` agar box boot langsung dari SD card.
+
+### Default Access
+
+| Item       | Value             |
+| ---------- | ----------------- |
+| **IP**     | `20.20.20.20`     |
+| **User**   | `root`            |
+| **Pass**   | `bitswrt`         |
+| **Host**   | `BITS-WRT`        |
+
+---
+
+## 🏗️ Build
+
+Build dilakukan via GitHub Actions (`workflow_dispatch`). Opsi build:
+
+| Option              | Choices                                                                                      |
+| ------------------- | -------------------------------------------------------------------------------------------- |
+| **Device**          | HG680P, B860H                                                                                |
+| **OpenWrt**         | 24.10, 25.12                                                                                 |
+| **Kernel**          | 6.6, 6.12                                                                                    |
+| **Variant**         | Minimal, Standard                                                                            |
+| **VPN Client**      | OpenClash, Nikki, Momo (dan kombinasinya) / No Tunnel                                         |
+| **Remote Access**   | Tailscale, Cloudflare, keduanya / No Remote                                                  |
+| **Container**       | Docker, Podman / No Runtime                                                                  |
+| **Monitoring**      | Bandix, BITS Bot, keduanya / No Monitoring                                                   |
+| **WiFi / Modem**    | Yes / No                                                                                     |
+| **Mod SD Card**     | Yes / No                                                                                     |
+
+Output: `BITS-WRT_<versi>_<board>_k<kernel>_<fitur>_<variant>.img.xz` sebagai pre-release.
+
+---
+
+## 📄 Credits
+
+- [friWrt-MyWrtBuilder](https://github.com/frizkyiman/friWrt-MyWrtBuilder) by frizkyiman
+- [MyWrtBuilder](https://github.com/Revincx/MyWrtBuilder) by Revincx
+- [ULO-Builder](https://github.com/armarchindo/ULO-Builder) by DBAI
+- [ophub/amlogic-s9xxx-openwrt](https://github.com/ophub/amlogic-s9xxx-openwrt)
+
+---
+
+<div align="center">
+  <strong>BITS WRT</strong> Developed with ❤️ by <a href="https://bits.co.id"><strong>Banten IT Solutions</strong></a>
+</div>
