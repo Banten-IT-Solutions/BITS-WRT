@@ -31,6 +31,10 @@ echo "###############################################"
 echo "Setup custom repos"
 sed -i 's/option check_signature/# option check_signature/g' /etc/opkg.conf
 echo "src/gz bits https://banten-it-solutions.github.io/BITS-WRT-Packages" >> /etc/opkg/customfeeds.conf
+verop="$(grep 'DISTRIB_RELEASE=' /etc/openwrt_release | awk -F"'" '{print $2}' | cut -d. -f1-2)"
+arch="$(grep 'OPENWRT_ARCH' /etc/os-release | awk -F '"' '{print $2}')"
+echo "src/gz momo https://momomomo.pages.dev/openwrt-${verop}/${arch}/momo" >> /etc/opkg/customfeeds.conf
+echo "src/gz nikki https://nikkinikki.pages.dev/openwrt-${verop}/${arch}/nikki" >> /etc/opkg/customfeeds.conf
 
 # default theme handled by luci-theme-bits (40_bits_theme)
 
