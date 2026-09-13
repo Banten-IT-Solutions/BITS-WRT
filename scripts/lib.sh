@@ -261,9 +261,9 @@ download_packages() {
                 output_file="$download_dir/$(basename "$download_url")"
                 download_file "$download_url" "$output_file" || log "ERROR" "Failed to download $filename"
 
-                # apk: strip arch suffix (name-ver-rN_ARCH.apk -> name-ver-rN.apk)
-                if [ "${PKG_EXT:-ipk}" == "apk" ] && [[ "$output_file" == *_*.apk ]]; then
-                    mv "$output_file" "${output_file%_*}.apk"
+                # apk: strip noarch suffix (_all.apk -> .apk). Keep real arch (aarch64_generic).
+                if [ "${PKG_EXT:-ipk}" == "apk" ] && [[ "$output_file" == *_all.apk ]]; then
+                    mv "$output_file" "${output_file%_all.apk}.apk"
                 fi
             done
 ;;
