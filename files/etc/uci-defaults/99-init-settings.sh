@@ -27,13 +27,10 @@ echo "###############################################"
 # Banner owned by luci-theme-bits; link it where dropbear/sysinfo expect it
 [ -f /usr/share/bits-theme/banner ] && ln -sf /usr/share/bits-theme/banner /etc/banner
 
-# custom repo and Disable opkg signature check (pin kiddin9 to release branch, same as build time)
+# custom repo and Disable opkg signature check
 echo "Setup custom repos"
 sed -i 's/option check_signature/# option check_signature/g' /etc/opkg.conf
 echo "src/gz bits https://banten-it-solutions.github.io/BITS-WRT-Packages" >> /etc/opkg/customfeeds.conf
-verop="$(grep 'DISTRIB_RELEASE=' /etc/openwrt_release | awk -F"'" '{print $2}' | cut -d. -f1-2)"
-arch="$(grep 'OPENWRT_ARCH' /etc/os-release | awk -F '"' '{print $2}')"
-echo "src/gz custom_pkg https://dl.openwrt.ai/releases/${verop}/packages/${arch}/kiddin9" >> /etc/opkg/customfeeds.conf
 
 # default theme handled by luci-theme-bits (40_bits_theme)
 
