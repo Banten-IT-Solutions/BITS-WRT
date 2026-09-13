@@ -16,6 +16,7 @@
     <img src="https://img.shields.io/badge/Amlogic-ED1C24?style=flat" alt="Amlogic" />
     <img src="https://img.shields.io/badge/ARM64-0091BD?style=flat" alt="ARM64" />
     <img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat&logo=githubactions&logoColor=white" alt="GitHub Actions" />
+    <img src="https://img.shields.io/badge/license-MIT-green?style=flat" alt="MIT License" />
   </p>
 </div>
 
@@ -125,15 +126,6 @@ Build dilakukan via GitHub Actions (`workflow_dispatch`). Opsi build:
 | **Mod SD Card**     | Yes / No                                                                                     |
 
 Output: `BITS-WRT_<versi>_<board>_k<kernel>_<fitur>_<variant>.img.xz` sebagai pre-release.
-
----
-
-## 📄 Credits
-
-- [friWrt-MyWrtBuilder](https://github.com/frizkyiman/friWrt-MyWrtBuilder) by frizkyiman
-- [MyWrtBuilder](https://github.com/Revincx/MyWrtBuilder) by Revincx
-- [ULO-Builder](https://github.com/armarchindo/ULO-Builder) by DBAI
-- [ophub/amlogic-s9xxx-openwrt](https://github.com/ophub/amlogic-s9xxx-openwrt)
 
 ---
 
