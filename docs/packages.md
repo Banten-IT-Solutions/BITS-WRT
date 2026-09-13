@@ -42,9 +42,10 @@ standard = BASE + STD + STD_OPKG/APK + opsi
 
 - IPv6: `odhcp6c odhcpd-ipv6only kmod-nf-conntrack6 kmod-nf-log6 kmod-nf-reject6`
 - PPPoE: `ppp ppp-mod-pppoe kmod-ppp kmod-pppoe kmod-pppox kmod-slhc`
-- `mkf2fs libf2fs6 kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1`
+- `mkf2fs kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1`
+- f2fs lib (beda nama opkg/apk): `libf2fs6` (opkg) / `libf2fs` (apk)
 
-> `PACKAGES_STD_OPKG` / `PACKAGES_STD_APK` saat ini kosong (titik perawatan).
+> Split per package manager (`opkg` vs `apk`): `libusb-1.0-0`/`libusb-1.0` (STD) dan `libf2fs6`/`libf2fs` (exclude minimal) — ABI suffix dihapus di apk.
 
 ## 3. Opsi tambahan (aditif, berlaku kedua variant)
 

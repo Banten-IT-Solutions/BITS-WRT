@@ -55,7 +55,7 @@ zoneinfo-asia zoneinfo-core"
 # =====================================================================
 # STANDARD — extra rich packages (shared opkg + apk)
 # =====================================================================
-PACKAGES_STD=" libiwinfo-data libiwinfo-lua liblucihttp-lua libubus-lua libuci-lua lua libusb-1.0-0 \
+PACKAGES_STD=" libiwinfo-data libiwinfo-lua liblucihttp-lua libubus-lua libuci-lua lua \
 htop unzip unrar gzip screen httping openssh-sftp-server file \
 cpusage zram-swap adb block-mount microsocks resolveip dmesg \
 coreutils coreutils-base64 coreutils-nohup coreutils-stty coreutils-stat coreutils-sleep coreutils-whoami \
@@ -69,11 +69,15 @@ kmod-usb-storage-uas ntfs-3g \
 luci-app-bitsfilemanager luci-app-engsel"
 
 # =====================================================================
-# STANDARD extras, split per package manager (maintenance point)
-#   opkg (24.10) / apk (25.12) — kosong untuk sekarang
+# STANDARD extras, split per package manager (name differs opkg vs apk)
+#   libusb ABI suffix: opkg (24.10) = libusb-1.0-0, apk (25.12) = libusb-1.0
 # =====================================================================
-PACKAGES_STD_OPKG=""
-PACKAGES_STD_APK=""
+PACKAGES_STD_OPKG="libusb-1.0-0"
+PACKAGES_STD_APK="libusb-1.0"
+
+# f2fs lib also differs: opkg = libf2fs6, apk = libf2fs (used by minimal exclude)
+PACKAGES_EXCLUDE_F2FS_OPKG="-libf2fs6"
+PACKAGES_EXCLUDE_F2FS_APK="-libf2fs"
 
 # =====================================================================
 # MINIMAL — strip default bloat. Only applied to variant "minimal";
@@ -82,7 +86,7 @@ PACKAGES_STD_APK=""
 # =====================================================================
 PACKAGES_EXCLUDE_MINIMAL=" -odhcp6c -odhcpd-ipv6only -kmod-nf-conntrack6 -kmod-nf-log6 -kmod-nf-reject6 \
 -ppp -ppp-mod-pppoe -kmod-ppp -kmod-pppoe -kmod-pppox -kmod-slhc \
--mkf2fs -libf2fs6 -kmod-fs-vfat -kmod-nls-cp437 -kmod-nls-iso8859-1"
+-mkf2fs -kmod-fs-vfat -kmod-nls-cp437 -kmod-nls-iso8859-1"
 
 # =====================================================================
 # Tunnel option (shared)
@@ -234,6 +238,11 @@ build_firmware() {
     # Package list per variant + package manager
     if [ "$variant" == "minimal" ]; then
         PACKAGES="$PACKAGES_BASE $PACKAGES_EXCLUDE_MINIMAL"
+        if [ "$use_apk" == "true" ]; then
+            PACKAGES+="$PACKAGES_EXCLUDE_F2FS_APK"
+        else
+            PACKAGES+="$PACKAGES_EXCLUDE_F2FS_OPKG"
+        fi
     else
         PACKAGES="$PACKAGES_BASE $PACKAGES_STD"
         if [ "$use_apk" == "true" ]; then
