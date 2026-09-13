@@ -507,8 +507,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "bitswrt-amlogic-${{ env.BRANCH }}"
+          tag_name: "bitswrt-amlogic-${{ env.BRANCH }}-${{ env.TUNNEL }}-${{ env.DATE }}-${{ github.run_number }}"
           name: BITS-WRT-Amlogic-${{ env.BRANCH }}-${{ env.TUNNEL }}-${{ env.DATE }}
           files: ${{ env.WORKING_DIR }}/compiled_images/*.xz
           prerelease: true
-          generate_release_notes: true
+          body: |
+            ## Opsi Build
+            | Opsi | Nilai |
+            |------|-------|
+            | Device | ${{ inputs.board }} |
+            | OpenWrt | ${{ inputs.openwrt_version }} |
+            | Kernel | ${{ inputs.openwrt_kernel }} |
+            | Variant | ${{ inputs.variant }} |
+            | VPN Client | ${{ inputs.tunnel }} |
+            | Remote Access | ${{ inputs.remote }} |
+            | Container | ${{ inputs.container }} |
+            | Monitoring | ${{ inputs.monitoring }} |
+            | WiFi | ${{ inputs.wifi }} |
+            | Extra Modem | ${{ inputs.modem }} |
+            | Mod SD Card | ${{ inputs.mod_sdcard }} |
+
+            Detail paket per opsi: [docs/packages.md](https://github.com/Banten-IT-Solutions/BITS-WRT/blob/main/docs/packages.md)
